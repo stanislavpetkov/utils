@@ -11,7 +11,7 @@ namespace dbxread.Models
         public int? Activityid { get;  set;}
         
         
-        public static List<CountriesInv> ReadTable(ref FbConnection connection)
+        public static List<CountriesInv> ReadTable(FbConnection connection)
         {
             try
             {

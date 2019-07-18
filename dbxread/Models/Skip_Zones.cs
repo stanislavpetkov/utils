@@ -14,7 +14,7 @@ namespace dbxread.Models
         public string Text { get; set; }
         
         
-        public static List<SkipZones> ReadTable(ref FbConnection connection)
+        public static List<SkipZones> ReadTable(FbConnection connection)
         {
             try
             {

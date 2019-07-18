@@ -11,7 +11,7 @@ namespace dbxread.Models
         public int ? PositionId { get; set; }
 
         
-        public static List<PersonsInv> ReadTable(ref FbConnection connection)
+        public static List<PersonsInv> ReadTable(FbConnection connection)
         {
             try
             {

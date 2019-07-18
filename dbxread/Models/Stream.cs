@@ -23,7 +23,7 @@ namespace dbxread.Models
         public int? FileSize { get; set; }
 
 
-        public static List<Stream> ReadTable(ref FbConnection connection)
+        public static List<Stream> ReadTable(FbConnection connection)
         {
             try
             {

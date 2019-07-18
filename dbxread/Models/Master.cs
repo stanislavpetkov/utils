@@ -44,7 +44,7 @@ namespace dbxread.Models
         public int? Languageid { get; set; }
 
 
-        public static List<Master> ReadTable(ref FbConnection connection)
+        public static List<Master> ReadTable(FbConnection connection)
         {
             try
             {

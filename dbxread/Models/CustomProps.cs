@@ -16,7 +16,7 @@ namespace dbxread.Models
         
         
         
-        public static List<CustomProps> ReadTable(ref FbConnection connection)
+        public static List<CustomProps> ReadTable(FbConnection connection)
         {
             try
             {

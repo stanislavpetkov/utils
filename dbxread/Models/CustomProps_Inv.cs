@@ -12,7 +12,7 @@ namespace dbxread.Models
         public string PropValue { get; set; }
         
         
-        public static List<CustomPropsInv> ReadTable(ref FbConnection connection)
+        public static List<CustomPropsInv> ReadTable(FbConnection connection)
         {
             try
             {

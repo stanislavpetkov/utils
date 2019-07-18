@@ -9,7 +9,7 @@ namespace dbxread.Models
         public int? RecId { get; set; }
         public int? KeywordId { get; set; }
         
-        public static List<KeywordsInv> ReadTable(ref FbConnection connection)
+        public static List<KeywordsInv> ReadTable(FbConnection connection)
         {
             try
             {

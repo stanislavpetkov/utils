@@ -14,7 +14,7 @@ namespace dbxread.Models
         public int? VideoBitRate { get; set; }
 
 
-        public static List<StreamVideoInfo> ReadTable(ref FbConnection connection)
+        public static List<StreamVideoInfo> ReadTable(FbConnection connection)
         {
             try
             {

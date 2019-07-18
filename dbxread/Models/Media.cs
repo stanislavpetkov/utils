@@ -17,7 +17,7 @@ namespace dbxread.Models
         public int? Status { get; set; }
         public string Pool { get; set; }
         
-        public static List<Media> ReadTable(ref FbConnection connection)
+        public static List<Media> ReadTable(FbConnection connection)
         {
             try
             {

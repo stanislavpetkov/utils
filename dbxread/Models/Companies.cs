@@ -12,7 +12,7 @@ namespace dbxread.Models
         
         
         
-        public static List<Companies> ReadTable(ref FbConnection connection)
+        public static List<Companies> ReadTable(FbConnection connection)
         {
             try
             {

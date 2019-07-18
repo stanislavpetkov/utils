@@ -6,12 +6,12 @@ namespace dbxread.Models
 {
     public class Categories
     {
-        public int Categoryid { get; set; }
+        public int CategoryId { get; set; }
         public string CategoryName { get; set; }
         public int? Typeid { get; set; }
         public int? Color { get; set; }
         
-        public static List<Categories> ReadTable(ref FbConnection connection)
+        public static List<Categories> ReadTable(FbConnection connection)
         {
             try
             {
@@ -30,7 +30,7 @@ namespace dbxread.Models
                 {
                     var m = new Categories()
                     {
-                        Categoryid = reader.GetInt32(0),
+                        CategoryId = reader.GetInt32(0),
                         CategoryName = reader.GetString(1),
                         Typeid = reader.GetInt32N(2),
                         Color = reader.GetInt32N(3)

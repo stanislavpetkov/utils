@@ -11,7 +11,7 @@ namespace dbxread.Models
         public int ? ItemId { get; set; }
         public DateTime ? EditTime { get; set; }
 
-        public static List<EditItems> ReadTable(ref FbConnection connection)
+        public static List<EditItems> ReadTable(FbConnection connection)
         {
             try
             {

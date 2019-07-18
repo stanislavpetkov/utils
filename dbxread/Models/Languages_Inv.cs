@@ -10,7 +10,7 @@ namespace dbxread.Models
         public int ? LanguageId { get; set; }
         
         
-        public static List<LanguagesInv> ReadTable(ref FbConnection connection)
+        public static List<LanguagesInv> ReadTable(FbConnection connection)
         {
             try
             {

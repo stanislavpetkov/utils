@@ -10,7 +10,7 @@ namespace dbxread.Models
         public int ? Companyid { get; set; }
         public int ? Activityid { get; set; }
         
-        public static List<CompaniesInv> ReadTable(ref FbConnection connection)
+        public static List<CompaniesInv> ReadTable(FbConnection connection)
         {
             try
             {

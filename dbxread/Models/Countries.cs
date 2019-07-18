@@ -14,7 +14,7 @@ namespace dbxread.Models
         public string Ab2 { get; set; }
         public string Ab3 { get; set; }
         
-        public static List<Countries> ReadTable(ref FbConnection connection)
+        public static List<Countries> ReadTable(FbConnection connection)
         {
             try
             {

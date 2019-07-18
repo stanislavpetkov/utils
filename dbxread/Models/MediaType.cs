@@ -12,7 +12,7 @@ namespace dbxread.Models
         public int? PrepareTime { get; set; }
         public int? Color { get; set; }
         
-        public static List<MediaType> ReadTable(ref FbConnection connection)
+        public static List<MediaType> ReadTable(FbConnection connection)
         {
             try
             {

@@ -11,7 +11,7 @@ namespace dbxread.Models
         public string UserPassword { get; set; }
         public int? UserGroupId { get; set; }
         
-        public static List<Users> ReadTable(ref FbConnection connection)
+        public static List<Users> ReadTable(FbConnection connection)
         {
             try
             {

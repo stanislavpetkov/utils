@@ -13,7 +13,7 @@ namespace dbxread.Models
         public int? AudioChannels { get; set; }
         
         
-        public static List<StreamAudioInfo> ReadTable(ref FbConnection connection)
+        public static List<StreamAudioInfo> ReadTable(FbConnection connection)
         {
             try
             {

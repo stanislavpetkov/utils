@@ -6,11 +6,22 @@ namespace dbxread.Models
 {
     public class AgeRates
     {
-        public int AgeRateid { get; set; }
+        public int AgeRateId { get; set; }
         public string AgeRateName { get; set; }
         public int? Color { get; set; }
+
+        public AgeRates()
+        {
+        }
+
+        public AgeRates(AgeRates from)
+        {
+            AgeRateId = from.AgeRateId;
+            AgeRateName = string.Copy(from.AgeRateName);
+            Color = from.Color;
+        }
         
-        public static List<AgeRates> ReadTable(ref FbConnection connection)
+        public static List<AgeRates> ReadTable(FbConnection connection)
         {
             try
             {
@@ -29,7 +40,7 @@ namespace dbxread.Models
                 {
                     var m = new AgeRates()
                     {
-                        AgeRateid = reader.GetInt32(0),
+                        AgeRateId = reader.GetInt32(0),
                         AgeRateName = reader.GetString(1),
                         Color = reader.GetInt32N(2)
                     };

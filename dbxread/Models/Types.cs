@@ -9,8 +9,17 @@ namespace dbxread.Models
         public int TypeId { get; set; }
         public string TypeName { get; set; }
         public int? Color { get; set; }
+
+        public Types()
+        {}
+        public Types(Types t)
+        {
+            TypeId = t.TypeId;
+            TypeName = string.Copy(t.TypeName);
+            Color =  t.Color;
+        }
         
-        public static List<Types> ReadTable(ref FbConnection connection)
+        public static List<Types> ReadTable(FbConnection connection)
         {
             try
             {

@@ -17,7 +17,7 @@ namespace dbxread.Models
         public DateTime? KillDate { get; set; }
 
 
-        public static List<Instance> ReadTable(ref FbConnection connection)
+        public static List<Instance> ReadTable(FbConnection connection)
         {
             try
             {

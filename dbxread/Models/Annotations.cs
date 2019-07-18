@@ -13,7 +13,7 @@ namespace dbxread.Models
         public string Text { get; set; }
         public System.IO.MemoryStream Picture { get; set; }
         
-        public static List<Annotations> ReadTable(ref FbConnection connection)
+        public static List<Annotations> ReadTable(FbConnection connection)
         {
             try
             {

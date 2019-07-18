@@ -11,7 +11,7 @@ namespace dbxread.Models
         public int? Color { get; set; }
         
         
-        public static List<CompanyActivity> ReadTable(ref FbConnection connection)
+        public static List<CompanyActivity> ReadTable(FbConnection connection)
         {
             try
             {

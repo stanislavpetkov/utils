@@ -10,7 +10,7 @@ namespace dbxread.Models
         public int ? Inp { get; set; }
         public int ? Outp { get; set; }
 
-        public static List<DayMask> ReadTable(ref FbConnection connection)
+        public static List<DayMask> ReadTable(FbConnection connection)
         {
             try
             {

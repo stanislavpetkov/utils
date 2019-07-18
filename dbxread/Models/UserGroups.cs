@@ -10,7 +10,7 @@ namespace dbxread.Models
         public string UserGroupName { get; set; }
         public int? Rights { get; set; }
         
-        public static List<UserGroups> ReadTable(ref FbConnection connection)
+        public static List<UserGroups> ReadTable(FbConnection connection)
         {
             try
             {

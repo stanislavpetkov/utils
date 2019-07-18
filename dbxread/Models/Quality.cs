@@ -12,7 +12,7 @@ namespace dbxread.Models
         public int? QOrder { get; set; }
 
 
-        public static List<Quality> ReadTable(ref FbConnection connection)
+        public static List<Quality> ReadTable(FbConnection connection)
         {
             try
             {

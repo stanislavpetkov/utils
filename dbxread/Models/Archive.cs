@@ -6,12 +6,12 @@ namespace dbxread.Models
 {
     public class Archive
     {
-        public int Archiveid { get; set; }
+        public int ArchiveId { get; set; }
         public string ArchiveName { get; set; }
         public int? Color { get; set; }
         
         
-        public static List<Archive> ReadTable(ref FbConnection connection)
+        public static List<Archive> ReadTable(FbConnection connection)
         {
             try
             {
@@ -30,7 +30,7 @@ namespace dbxread.Models
                 {
                     var m = new Archive()
                     {
-                        Archiveid = reader.GetInt32(0),
+                        ArchiveId = reader.GetInt32(0),
                         ArchiveName = reader.GetString(1),
                         Color = reader.GetInt32N(2)
                     };

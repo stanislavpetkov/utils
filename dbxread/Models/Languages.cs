@@ -10,7 +10,7 @@ namespace dbxread.Models
         public string LanguageName { get; set; }
         public int? Color { get; set; }
         
-        public static List<Languages> ReadTable(ref FbConnection connection)
+        public static List<Languages> ReadTable(FbConnection connection)
         {
             try
             {
