@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal">
+    <data-source name="FireBird - databox_hd.gdb@localhost" uuid="4210619b-887b-427d-9d5d-ab80008bd996">
+      <database-info product="Firebird 3.0" version="LI-V3.0.1.32609" jdbc-version="4.2" driver-name="Jaybird JCA/JDBC driver" driver-version="4.0.0" dbms="FIREBIRD" exact-version="3.0" exact-driver-version="4.0">
+        <extra-name-characters>$</extra-name-characters>
+        <identifier-quote-string>&quot;</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="upper" quoted-identifiers="exact" />
+      <secret-storage>master_key</secret-storage>
+      <user-name>SYSDBA</user-name>
+      <introspection-schemas>@:@</introspection-schemas>
+    </data-source>
+  </component>
+</project>
