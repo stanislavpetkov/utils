@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="$USER_HOME$/.Rider2019.1/system/extResources" t="IncludeRecursive" />
+    <e p="$USER_HOME$/.Rider2019.1/system/resharper-host/local/Transient/ReSharperHost/v191/SolutionCaches/_dbxread.1109516154.00" t="ExcludeRecursive" />
+    <e p="$PROJECT_DIR$" t="IncludeRecursive">
+      <e p="DBManager" t="Include">
+        <e p="DBManager.cs" t="Include" />
+      </e>
+      <e p="FbExt.cs" t="Include" />
+      <e p="Models" t="Include">
+        <e p="AgeRates.cs" t="Include" />
+        <e p="Annotations.cs" t="Include" />
+        <e p="Archive.cs" t="Include" />
+        <e p="Categories.cs" t="Include" />
+        <e p="Companies.cs" t="Include" />
+        <e p="Companies_Inv.cs" t="Include" />
+        <e p="CompanyActivity.cs" t="Include" />
+        <e p="Countries.cs" t="Include" />
+        <e p="Countries_Inv.cs" t="Include" />
+        <e p="CountryActivity.cs" t="Include" />
+        <e p="CustomProps.cs" t="Include" />
+        <e p="CustomProps_Inv.cs" t="Include" />
+        <e p="DayMask.cs" t="Include" />
+        <e p="EditItems.cs" t="Include" />
+        <e p="Genres.cs" t="Include" />
+        <e p="Genres_Inv.cs" t="Include" />
+        <e p="Groups.cs" t="Include" />
+        <e p="Instance.cs" t="Include" />
+        <e p="Keywords.cs" t="Include" />
+        <e p="Keywords_Inv.cs" t="Include" />
+        <e p="Languages.cs" t="Include" />
+        <e p="Languages_Inv.cs" t="Include" />
+        <e p="Master.cs" t="Include" />
+        <e p="Media.cs" t="Include" />
+        <e p="MediaType.cs" t="Include" />
+        <e p="Notes.cs" t="Include" />
+        <e p="Persons.cs" t="Include" />
+        <e p="Persons_Inv.cs" t="Include" />
+        <e p="Positions.cs" t="Include" />
+        <e p="Quality.cs" t="Include" />
+        <e p="Sequences.cs" t="Include" />
+        <e p="Skip_Zones.cs" t="Include" />
+        <e p="Stream.cs" t="Include" />
+        <e p="StreamAudioInfo.cs" t="Include" />
+        <e p="StreamVideoInfo.cs" t="Include" />
+        <e p="Types.cs" t="Include" />
+        <e p="UserGroups.cs" t="Include" />
+        <e p="Users.cs" t="Include" />
+      </e>
+      <e p="Program.cs" t="Include" />
+      <e p="bin" t="ExcludeRecursive" />
+      <e p="dbxread.csproj" t="IncludeRecursive" />
+      <e p="dbxread.sln" t="IncludeFlat" />
+      <e p="obj" t="ExcludeRecursive">
+        <e p="Debug" t="Include">
+          <e p="netcoreapp2.2" t="Include">
+            <e p="dbxread.AssemblyInfo.cs" t="Include" />
+          </e>
+        </e>
+      </e>
+      <e p="packages" t="ExcludeRecursive" />
+    </e>
+  </component>
+</project>
