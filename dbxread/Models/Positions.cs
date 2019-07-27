@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using FirebirdSql.Data.FirebirdClient;
 
-namespace dbxread.Models
+namespace DbxRead.Models
 {
     public class Positions
     {
@@ -31,7 +31,7 @@ namespace dbxread.Models
                     {
                         PositionId = reader.GetInt32(0),
                         PositionName= reader.GetString(1),
-                        Color= reader.GetInt32N(2),
+                        Color= reader.GetInt32N(2)
                         
                     };
                     records.Add(m);

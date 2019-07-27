@@ -6,7 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="FirebirdSql.Data.FirebirdClient" Version="6.6.0" />
+      <PackageReference Include="FirebirdSql.Data.FirebirdClient" Version="6.7.0" />
       <PackageReference Include="System.Text.Encoding.CodePages" Version="4.5.1" />
     </ItemGroup>
 

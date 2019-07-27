@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using FirebirdSql.Data.FirebirdClient;
 
-namespace dbxread.Models
+namespace DbxRead.Models
 {
     public class DayMask
     {
@@ -31,7 +31,7 @@ namespace dbxread.Models
                     {
                         RecId = reader.GetInt32N(0),
                         Inp = reader.GetInt32N(1),
-                        Outp = reader.GetInt32N(2),
+                        Outp = reader.GetInt32N(2)
                     };
                     records.Add(m);
                 }

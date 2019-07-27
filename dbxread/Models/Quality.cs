@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using FirebirdSql.Data.FirebirdClient;
 
-namespace dbxread.Models
+namespace DbxRead.Models
 {
     public class Quality
     {
@@ -29,12 +29,12 @@ namespace dbxread.Models
 
                 while (reader.Read())
                 {
-                    var m = new Quality()
+                    var m = new Quality
                     {
                         QualityId = reader.GetInt32(0),
                         QualityName = reader.GetString(1),
                         Color = reader.GetInt32N(2),
-                        QOrder = reader.GetInt32N(3),
+                        QOrder = reader.GetInt32N(3)
                     };
                     records.Add(m);
                 }

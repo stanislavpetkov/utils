@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using FirebirdSql.Data.FirebirdClient;
 
-namespace dbxread.Models
+namespace DbxRead.Models
 {
     public class GenresInv
     {
@@ -29,7 +29,7 @@ namespace dbxread.Models
                     var m = new GenresInv()
                     {
                         GenreId = reader.GetInt32N(0),
-                        RecId = reader.GetInt32N(1),
+                        RecId = reader.GetInt32N(1)
                     };
                     records.Add(m);
                 }

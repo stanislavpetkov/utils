@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using FirebirdSql.Data.FirebirdClient;
 
-namespace dbxread.Models
+namespace DbxRead.Models
 {
     public class StreamVideoInfo
     {
         public int StreamInfoid { get; set; }
-        public string VCT { get; set; }
+        public string Vct { get; set; }
         public int? Width { get; set; }
         public int? Height { get; set; }
         public float? FrameRate { get; set; }
@@ -32,10 +32,10 @@ namespace dbxread.Models
 
                 while (reader.Read())
                 {
-                    var m = new StreamVideoInfo()
+                    var m = new StreamVideoInfo
                     {
                         StreamInfoid = reader.GetInt32(0),
-                        VCT = reader.GetString(1),
+                        Vct = reader.GetString(1),
                         Width = reader.GetInt32N(2),
                         Height = reader.GetInt32N(3),
                         FrameRate = reader.GetFloatN(4),

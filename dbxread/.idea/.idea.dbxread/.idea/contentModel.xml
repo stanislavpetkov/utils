@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
+    <e p="$APPLICATION_CONFIG_DIR$/consoles/db" t="IncludeRecursive" />
+    <e p="$APPLICATION_CONFIG_DIR$/extensions" t="IncludeRecursive" />
     <e p="$USER_HOME$/.Rider2019.1/system/extResources" t="IncludeRecursive" />
     <e p="$USER_HOME$/.Rider2019.1/system/resharper-host/local/Transient/ReSharperHost/v191/SolutionCaches/_dbxread.1109516154.00" t="ExcludeRecursive" />
     <e p="$PROJECT_DIR$" t="IncludeRecursive">
+      <e p="Clips_From_SD_Not_Found_in_HD.log" t="Include" />
+      <e p="Clips_Not_Found.log" t="Include" />
+      <e p="ConsistencyReport_AfterRemoveFile.log" t="Include" />
+      <e p="ConsistencyReport_BeforeRemoveFile.log" t="Include" />
       <e p="DBManager" t="Include">
         <e p="DBManager.cs" t="Include" />
       </e>
@@ -48,7 +54,11 @@
         <e p="UserGroups.cs" t="Include" />
         <e p="Users.cs" t="Include" />
       </e>
+      <e p="NotesRemoveReport.log" t="Include" />
+      <e p="PlanetaHD_Clips_With_Wrong_Info_ID.log" t="Include" />
+      <e p="PlanetaSD_Clips_With_Wrong_Info_ID.log" t="Include" />
       <e p="Program.cs" t="Include" />
+      <e p="RemoveEmptyFileRecords.log" t="Include" />
       <e p="bin" t="ExcludeRecursive" />
       <e p="dbxread.csproj" t="IncludeRecursive" />
       <e p="dbxread.sln" t="IncludeFlat" />

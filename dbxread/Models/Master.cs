@@ -2,24 +2,24 @@
 using System.Collections.Generic;
 using FirebirdSql.Data.FirebirdClient;
 
-namespace dbxread.Models
+namespace DbxRead.Models
 {
     public class Master
     {
-        public int Recid { get; set; }
+        public int RecId { get; set; }
         public string Creator { get; set; }
-        public string Clipid { get; set; }
+        public string ClipId { get; set; }
         public string Title { get; set; }
         public string Season { get; set; }
         public int? Status { get; set; }
-        public int? Sequenceid { get; set; }
-        public int? Groupid { get; set; }
+        public int? SequenceId { get; set; }
+        public int? GroupId { get; set; }
         public int? Typeid { get; set; }
-        public int? Categoryid { get; set; }
+        public int? CategoryId { get; set; }
         public int? Duration { get; set; }
-        public DateTime? Proddate { get; set; }
-        public DateTime? Receiptdate { get; set; }
-        public int? Episodeno { get; set; }
+        public DateTime? ProdDate { get; set; }
+        public DateTime? ReceiptDate { get; set; }
+        public int? EpisodeNo { get; set; }
         public short? ReqLeft { get; set; }
         public short? ReqTotal { get; set; }
         public short? ReqYear1 { get; set; }
@@ -38,10 +38,10 @@ namespace dbxread.Models
         public double? ValidTo { get; set; }
         public short? Priority { get; set; }
         public double? Rating { get; set; }
-        public string Plotoutline { get; set; }
+        public string PlotOutline { get; set; }
         public int? AgeRate { get; set; }
-        public int? Enablemask { get; set; }
-        public int? Languageid { get; set; }
+        public int? EnableMask { get; set; }
+        public int? LanguageId { get; set; }
 
 
         public static List<Master> ReadTable(FbConnection connection)
@@ -70,20 +70,20 @@ namespace dbxread.Models
                 {
                     var m = new Master
                     {
-                        Recid = reader.GetInt32(0),
+                        RecId = reader.GetInt32(0),
                         Creator = reader.GetString(1),
-                        Clipid = reader.GetString(2),
+                        ClipId = reader.GetString(2),
                         Title = reader.GetString(3),
                         Season = reader.GetString(4),
                         Status = reader.GetInt32N(5),
-                        Sequenceid = reader.GetInt32N(6),
-                        Groupid = reader.GetInt32N(7),
+                        SequenceId = reader.GetInt32N(6),
+                        GroupId = reader.GetInt32N(7),
                         Typeid = reader.GetInt32N(8),
-                        Categoryid = reader.GetInt32N(9),
+                        CategoryId = reader.GetInt32N(9),
                         Duration = reader.GetInt32N(10),
-                        Proddate = reader.GetDateTimeN(11),
-                        Receiptdate = reader.GetDateTimeN(12),
-                        Episodeno = reader.GetInt32N(13),
+                        ProdDate = reader.GetDateTimeN(11),
+                        ReceiptDate = reader.GetDateTimeN(12),
+                        EpisodeNo = reader.GetInt32N(13),
                         ReqLeft = reader.GetInt16N(14),
                         ReqTotal = reader.GetInt16N(15),
                         ReqYear1 = reader.GetInt16N(16),
@@ -102,10 +102,10 @@ namespace dbxread.Models
                         ValidTo = reader.GetDouble(29),
                         Priority = reader.GetInt16N(30),
                         Rating = reader.GetDouble(31),
-                        Plotoutline = reader.GetString(32),
+                        PlotOutline = reader.GetString(32),
                         AgeRate = reader.GetInt32(33),
-                        Enablemask = reader.GetInt32(34),
-                        Languageid = reader.GetInt32(35)
+                        EnableMask = reader.GetInt32(34),
+                        LanguageId = reader.GetInt32(35)
                     };
                     records.Add(m);
                 }

@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using FirebirdSql.Data.FirebirdClient;
 
-namespace dbxread.Models
+namespace DbxRead.Models
 {
     public class StreamAudioInfo
     {
         public int StreamInfoid { get; set; }
-        public string ACT { get; set; }
+        public string Act { get; set; }
         public int? AudioSampleRate { get; set; }
         public int? AudioBitRate { get; set; }
         public int? AudioChannels { get; set; }
@@ -31,10 +31,10 @@ namespace dbxread.Models
 
                 while (reader.Read())
                 {
-                    var m = new StreamAudioInfo()
+                    var m = new StreamAudioInfo
                     {
                         StreamInfoid = reader.GetInt32(0),
-                        ACT = reader.GetString(1),
+                        Act = reader.GetString(1),
                         AudioSampleRate = reader.GetInt32N(2),
                         AudioBitRate = reader.GetInt32N(3),
                         AudioChannels = reader.GetInt32N(4)

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using FirebirdSql.Data.FirebirdClient;
 
-namespace dbxread.Models
+namespace DbxRead.Models
 {
     public class UserGroups
     {
@@ -27,7 +27,7 @@ namespace dbxread.Models
 
                 while (reader.Read())
                 {
-                    var m = new UserGroups()
+                    var m = new UserGroups
                     {
                         UserGroupId = reader.GetInt32(0),
                         UserGroupName = reader.GetString(1),

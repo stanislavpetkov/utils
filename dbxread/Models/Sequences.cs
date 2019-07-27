@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using FirebirdSql.Data.FirebirdClient;
 
-namespace dbxread.Models
+namespace DbxRead.Models
 {
     public class Sequences
     {
@@ -29,12 +29,12 @@ namespace dbxread.Models
 
                 while (reader.Read())
                 {
-                    var m = new Sequences()
+                    var m = new Sequences
                     {
                         SequenceId = reader.GetInt32(0),
                         SequenceName = reader.GetString(1),
                         EpisodeCount = reader.GetInt32N(2),
-                        Color = reader.GetInt32N(3),
+                        Color = reader.GetInt32N(3)
                         
                     };
                     records.Add(m);

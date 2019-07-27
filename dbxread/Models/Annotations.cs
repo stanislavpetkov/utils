@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using FirebirdSql.Data.FirebirdClient;
 
-namespace dbxread.Models
+namespace DbxRead.Models
 {
     public class Annotations
     {
@@ -11,7 +11,7 @@ namespace dbxread.Models
         public int? P1 { get; set; }
         public int? P2 { get; set; }
         public string Text { get; set; }
-        public System.IO.MemoryStream Picture { get; set; }
+        public MemoryStream Picture { get; set; }
         
         public static List<Annotations> ReadTable(FbConnection connection)
         {

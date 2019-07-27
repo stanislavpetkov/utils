@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using FirebirdSql.Data.FirebirdClient;
 
-namespace dbxread.Models
+namespace DbxRead.Models
 {
     public class Types
     {
@@ -36,11 +36,11 @@ namespace dbxread.Models
 
                 while (reader.Read())
                 {
-                    var m = new Types()
+                    var m = new Types
                     {
                         TypeId = reader.GetInt32(0),
                         TypeName = reader.GetString(1),
-                        Color = reader.GetInt32N(2),
+                        Color = reader.GetInt32N(2)
                     };
                     records.Add(m);
                 }

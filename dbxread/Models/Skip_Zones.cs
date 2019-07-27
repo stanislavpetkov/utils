@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using FirebirdSql.Data.FirebirdClient;
 
-namespace dbxread.Models
+namespace DbxRead.Models
 {
     public class SkipZones
     {
@@ -31,7 +31,7 @@ namespace dbxread.Models
 
                 while (reader.Read())
                 {
-                    var m = new SkipZones()
+                    var m = new SkipZones
                     {
                         StreamId = reader.GetInt32N(0),
                         P1 = reader.GetInt32N(1),

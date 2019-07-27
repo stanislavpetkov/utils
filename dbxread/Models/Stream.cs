@@ -2,21 +2,21 @@
 using System.Collections.Generic;
 using FirebirdSql.Data.FirebirdClient;
 
-namespace dbxread.Models
+namespace DbxRead.Models
 {
     public class Stream
     {
-        public int Streamid { get; set; }
-        public int? Instanceid { get; set; }
+        public int StreamId { get; set; }
+        public int? InstanceId { get; set; }
         public float? AudioLevel { get; set; }
         public string FileName { get; set; }
         public string StreamName { get; set; }
         public int? StreamType { get; set; }
-        public int? VideoInfoid { get; set; }
-        public int? AudioInfoid { get; set; }
+        public int? VideoInfoId { get; set; }
+        public int? AudioInfoId { get; set; }
         public int? InP { get; set; }
         public int? OutP { get; set; }
-        public int? Languageid { get; set; }
+        public int? LanguageId { get; set; }
         public string Main { get; set; }
         public int? Status { get; set; }
         public int? Part { get; set; }
@@ -42,19 +42,19 @@ namespace dbxread.Models
 
                 while (reader.Read())
                 {
-                    var m = new Stream()
+                    var m = new Stream
                     {
-                        Streamid = reader.GetInt32(0),
-                        Instanceid = reader.GetInt32N(1),
+                        StreamId = reader.GetInt32(0),
+                        InstanceId = reader.GetInt32N(1),
                         AudioLevel = reader.GetFloatN(2),
                         FileName = reader.GetString(3),
                         StreamName = reader.GetString(4),
                         StreamType = reader.GetInt32N(5),
-                        VideoInfoid = reader.GetInt32N(6),
-                        AudioInfoid = reader.GetInt32N(7),
+                        VideoInfoId = reader.GetInt32N(6),
+                        AudioInfoId = reader.GetInt32N(7),
                         InP = reader.GetInt32N(8),
                         OutP = reader.GetInt32N(9),
-                        Languageid = reader.GetInt32N(10),
+                        LanguageId = reader.GetInt32N(10),
                         Main = reader.GetString(11),
                         Status = reader.GetInt32N(12),
                         Part = reader.GetInt32N(13),
