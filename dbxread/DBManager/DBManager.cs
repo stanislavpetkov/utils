@@ -1122,5 +1122,29 @@ namespace DbxRead.DBManager
             log.Flush();
             log.Close();
         }
+
+        public void TryFixFilePaths(string newServer, string newDir)
+        {
+            foreach (var stream in StreamRecords)
+            {
+                if (stream.FileName.Substring(0,2)!="\\\\")
+                {
+                    Console.WriteLine("Failed");
+                }
+                var posStart = stream.FileName.IndexOf("\\", 0);
+                var posEnd = stream.FileName.IndexOf("\\", 2);
+                var server = stream.FileName.Substring(posStart+2, posEnd);
+                if (server != newServer)
+                {
+                    stream.FileName = stream.FileName.Replace(server, newServer);
+                }
+
+                if (stream.FileName.IndexOf("\\planeta tv\\", 0) != -1)
+                {
+                    stream.FileName = stream.FileName.Replace("\\planeta tv\\", "\\" + newDir + "\\");
+                }
+                Console.WriteLine(stream.FileName);
+            }
+        }
     }
 }

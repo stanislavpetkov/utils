@@ -15,7 +15,7 @@ namespace DbxRead.Models
         public Types(Types t)
         {
             TypeId = t.TypeId;
-            TypeName = string.Copy(t.TypeName);
+            TypeName = new string(t.TypeName);
             Color =  t.Color;
         }
         

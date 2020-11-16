@@ -8,7 +8,7 @@ namespace DbxRead
         //ALTER CHARACTER SET WIN1251 SET DEFAULT collation WIN1251;
         private const string ConnectionStringHd = "User=SYSDBA;" +
                                           "Password=masterkey;" +
-                                          "Database=zbook:databox_hd.gdb;" +
+                                          @"Database=127.0.0.1:c:\development\databox_planeta_hd.gdb;" +
                                           "Port=3050;" +
                                           "Dialect=3;" +
                                           "Charset=WIN1251;" + //Ensure database is enforced to win1251
@@ -22,7 +22,7 @@ namespace DbxRead
 
         private const string ConnectionStringResult = "User=SYSDBA;" +
                                                      "Password=masterkey;" +
-                                                     "Database=zbook:databox_result.gdb;" +
+                                                     @"Database=127.0.0.1:c:\development\databox_result.gdb;" +
                                                      "Port=3050;" +
                                                      "Dialect=3;" +
                                                      "Charset=WIN1251;" + //Ensure database is enforced to win1251
@@ -36,7 +36,7 @@ namespace DbxRead
 
         private const string ConnectionStringSd = "User=SYSDBA;" +
                                                "Password=masterkey;" +
-                                               "Database=zbook:databox_planeta_16x9.gdb;" +
+                                               @"Database=127.0.0.1:c:\development\databox_planeta_16x9.gdb;" +
                                                "Port=3050;" +
                                                "Dialect=3;" +
                                                "Charset=WIN1251;" + //Ensure database is enforced to win1251
@@ -86,27 +86,47 @@ namespace DbxRead
 
                 if (true)
                 {
-                    const string poolStorage = @"\\StorageHD\Planeta HD\";
+                    const string poolStorage = @"\\storage2\Planeta HD\";
 
                     resultManager.SetMediaStoragePool(poolStorage);
                     resultManager.UpgradeCustomProps(hDbManager);
-                    resultManager.UpgradeKeywords(hDbManager);
+                    resultManager.UpgradeKeywords(hDbManager);                    
                     resultManager.UpdateMediaToDb(hDbManager);
                     resultManager.ReadDatabase();
                     resultManager.ConsistencyCheck("BeforeRemoveFile");
                     resultManager.RemoveEmptyFileRecords();
                     resultManager.ReadDatabase();
                     resultManager.RemoveNotes();
+                    resultManager.TryFixFilePaths("storage2", "Planeta HD");
                     resultManager.ReadDatabase();
                 }
 
-                
-                
-                
-                
+
+
+
+                //if (true)
+                //{
+                //    const string poolStorage = @"\\storage2\Planeta HD\";
+
+                //    resultManager.SetMediaStoragePool(poolStorage);
+                //    resultManager.UpgradeCustomProps(planetaManager);
+                //    resultManager.UpgradeKeywords(planetaManager);
+                //    resultManager.UpdateMediaToDb(planetaManager);
+                //    resultManager.ReadDatabase();
+                //    resultManager.ConsistencyCheck("BeforeRemoveFile");
+                //    resultManager.RemoveEmptyFileRecords();
+                //    resultManager.ReadDatabase();
+                //    resultManager.RemoveNotes();
+                //    resultManager.ReadDatabase();
+                //}
+
+
                 resultManager.ConsistencyCheck("AfterRemoveFile");
 
-                resultManager.CheckClipsInverse(hDbManager);
+                resultManager.CheckClipsInverse(other: hDbManager);
+                //resultManager.CheckClipsInverse(other: planetaManager);
+
+
                 //planetaManager.ConsistencyCheck("PlanetaDB");
                 //folkManager.ConsistencyCheck("FolkDB");
 

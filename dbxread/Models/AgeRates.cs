@@ -17,7 +17,7 @@ namespace DbxRead.Models
         public AgeRates(AgeRates from)
         {
             AgeRateId = from.AgeRateId;
-            AgeRateName = string.Copy(from.AgeRateName);
+            AgeRateName = new string(from.AgeRateName);
             Color = from.Color;
         }
         
