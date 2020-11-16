@@ -1131,17 +1131,26 @@ namespace DbxRead.DBManager
                 {
                     Console.WriteLine("Failed");
                 }
+
                 var posStart = stream.FileName.IndexOf("\\", 0);
                 var posEnd = stream.FileName.IndexOf("\\", 2);
-                var server = stream.FileName.Substring(posStart+2, posEnd);
+                var server = stream.FileName.Substring(posStart+2, posEnd-(posStart + 2));
                 if (server != newServer)
                 {
                     stream.FileName = stream.FileName.Replace(server, newServer);
                 }
 
-                if (stream.FileName.IndexOf("\\planeta tv\\", 0) != -1)
+                var start = stream.FileName.ToUpper().IndexOf("\\PLANETA TV\\", 0);
+                if (start != -1)
                 {
-                    stream.FileName = stream.FileName.Replace("\\planeta tv\\", "\\" + newDir + "\\");
+                    var endF = start + ("\\PLANETA TV\\").Length;
+                    var endFN = stream.FileName.Substring(endF);
+                    stream.FileName = stream.FileName.Substring(0, start) + "\\" + newDir + "\\" + endFN;   
+                }
+
+                if (!File.Exists(stream.FileName))
+                {
+                    Console.WriteLine(stream.FileName + " not exist");
                 }
                 Console.WriteLine(stream.FileName);
             }
