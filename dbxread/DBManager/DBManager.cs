@@ -1144,7 +1144,7 @@ namespace DbxRead.DBManager
                 if (start != -1)
                 {
                     var endF = start + ("\\PLANETA TV\\").Length;
-                    var endFN = stream.FileName.Substring(endF);
+                    var endFN = stream.FileName[endF..];
                     stream.FileName = stream.FileName.Substring(0, start) + "\\" + newDir + "\\" + endFN;   
                 }
 
