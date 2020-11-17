@@ -1,6 +1,7 @@
 ﻿
 // NOTE: Generated code may require at least .NET Framework 4.5 or .NET Core/Standard 2.0.
 //[System.SerializableAttribute()]
+using System;
 using System.Collections.Generic;
 /// <remarks/>
 [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -79,7 +80,7 @@ public partial class DataBoxExportDataBoxRecord
 
     private List<DataBoxExportDataBoxRecordCustomProperty> customPropertiesField = new List<DataBoxExportDataBoxRecordCustomProperty>();
 
-    private List<DataBoxExportDataBoxRecordInstance> instancesField = new List<DataBoxExportDataBoxRecordInstance>();
+    public List<DataBoxExportDataBoxRecordInstance> instancesField = new List<DataBoxExportDataBoxRecordInstance>();
 
     private string clipidField;
 
@@ -1042,7 +1043,7 @@ public partial class DataBoxExportDataBoxRecordInstanceStream
 
     private string languageIDField;
 
-    private int fileSizeField;
+    private long fileSizeField;
 
     private bool fileSizeFieldSpecified;
 
@@ -1149,7 +1150,7 @@ public partial class DataBoxExportDataBoxRecordInstanceStream
 
     /// <remarks/>
     [System.Xml.Serialization.XmlAttributeAttribute()]
-    public int FileSize
+    public long FileSize
     {
         get
         {
