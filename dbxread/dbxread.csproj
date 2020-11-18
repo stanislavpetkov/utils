@@ -6,6 +6,17 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <COMReference Include="MFORMATSLib.dll">
+        <WrapperTool>tlbimp</WrapperTool>
+        <VersionMinor>0</VersionMinor>
+        <VersionMajor>2</VersionMajor>
+        <Guid>927771c8-ea18-45c7-b8c1-5b2cc1b531de</Guid>
+        <Lcid>0</Lcid>
+        <Isolated>false</Isolated>
+      </COMReference>
+    </ItemGroup>
+
+    <ItemGroup>
       <PackageReference Include="FirebirdSql.Data.FirebirdClient" Version="7.5.0" />
       <PackageReference Include="System.Text.Encoding.CodePages" Version="5.0.0" />
     </ItemGroup>

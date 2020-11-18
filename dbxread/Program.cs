@@ -4,278 +4,303 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
-
+using MFORMATSLib;
 namespace DbxRead
 {
     class Program
     {
-
-        //ALTER CHARACTER SET WIN1251 SET DEFAULT collation WIN1251;
-        private const string ConnectionStringHd = "User=SYSDBA;" +
-                                          "Password=masterkey;" +
-                                          @"Database=127.0.0.1:c:\development\databox_planeta_hd.gdb;" +
-                                          "Port=3050;" +
-                                          "Dialect=3;" +
-                                          "Charset=WIN1251;" + //Ensure database is enforced to win1251
-                                          "Role=;" +
-                                          "Connection lifetime=15;" +
-                                          "Pooling=true;" +
-                                          "MinPoolSize=0;" +
-                                          "MaxPoolSize=50;" +
-                                          "Packet Size=8192;" +
-                                          "ServerType=0";
-
-        private const string ConnectionStringResult = "User=SYSDBA;" +
-                                                     "Password=masterkey;" +
-                                                     @"Database=127.0.0.1:c:\development\databox_result.gdb;" +
-                                                     "Port=3050;" +
-                                                     "Dialect=3;" +
-                                                     "Charset=WIN1251;" + //Ensure database is enforced to win1251
-                                                     "Role=;" +
-                                                     "Connection lifetime=15;" +
-                                                     "Pooling=true;" +
-                                                     "MinPoolSize=0;" +
-                                                     "MaxPoolSize=50;" +
-                                                     "Packet Size=16384;" +
-                                                     "ServerType=0";
-
-        private const string ConnectionStringSd = "User=SYSDBA;" +
-                                               "Password=masterkey;" +
-                                               @"Database=127.0.0.1:c:\development\databox_planeta_16x9.gdb;" +
-                                               "Port=3050;" +
-                                               "Dialect=3;" +
-                                               "Charset=WIN1251;" + //Ensure database is enforced to win1251
-                                               "Role=;" +
-                                               "Connection lifetime=15;" +
-                                               "Pooling=true;" +
-                                               "MinPoolSize=0;" +
-                                               "MaxPoolSize=50;" +
-                                               "Packet Size=8192;" +
-                                               "ServerType=0";
-
-        private const string ConnectionStringFolk = "User=SYSDBA;" +
-                                                   "Password=masterkey;" +
-                                                   "Database=zbook:databox_folk_16x9.gdb;" +
-                                                   "Port=3050;" +
-                                                   "Dialect=3;" +
-                                                   "Charset=WIN1251;" + //Ensure database is enforced to win1251
-                                                   "Role=;" +
-                                                   "Connection lifetime=15;" +
-                                                   "Pooling=true;" +
-                                                   "MinPoolSize=0;" +
-                                                   "MaxPoolSize=50;" +
-                                                   "Packet Size=8192;" +
-                                                   "ServerType=0";
-
-
-
-
-
         public static void Main(string[] args)
         {
             var startTime = DateTime.Now;
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            try
+
+
+            var mySerializer1 = new XmlSerializer(typeof(DataBoxExport));
+
+            var planetaHDFile = new FileStream(@"C:\Users\Control1\Desktop\PLANETA_HD_2.xml", FileMode.Open);
+            // Call the Deserialize method and cast to the object type.
+            var planetaHD = (DataBoxExport)mySerializer1.Deserialize(planetaHDFile);
+            planetaHDFile.Close();
+
+
+            var planetaSDFile = new FileStream(@"C:\Users\Control1\Desktop\PLANETA_SD_2.xml", FileMode.Open);
+            // Call the Deserialize method and cast to the object type.
+            var mySerializer2 = new XmlSerializer(typeof(DataBoxExport));
+            var planetaSD = (DataBoxExport)mySerializer2.Deserialize(planetaSDFile);
+            planetaSDFile.Close();
+
+
+            DataBoxExport outputXML = new DataBoxExport();
+
+
+            Console.WriteLine("HD Sequences");
+
+            foreach (var seq in planetaHD.Sequences)
+            {
+                // seq.EpisodeCount;
+                var res = outputXML.Sequences.Find(p => p.name.ToLowerInvariant() == seq.name.ToLowerInvariant());
+                if (res != null)
+                {
+                    continue;
+                }
+
+                outputXML.Sequences.Add(seq);
+            }
+
+
+            Console.WriteLine("HD Types");
+            foreach (var type in planetaHD.Types)
+            {
+                // seq.EpisodeCount;
+                var typeRes = outputXML.Types.Find(p => p.name.ToLowerInvariant() == type.name.ToLowerInvariant());
+                if (typeRes == null)
+                {
+                    outputXML.Types.Add(type);
+                    continue;
+                }
+
+                List<DataBoxExportTypeCategory> Categories = new List<DataBoxExportTypeCategory>();
+
+                Categories.AddRange(typeRes.category);
+                Categories.AddRange(type.category);
+
+                typeRes.category = Categories.Distinct().ToList();
+
+
+                List<DataBoxExportTypeGenre> Genres = new List<DataBoxExportTypeGenre>();
+
+                Genres.AddRange(typeRes.genre);
+                Genres.AddRange(type.genre);
+
+                typeRes.genre = Genres.Distinct().ToList();
+            }
+
+
+            // ======================================================= PLANETA SD
+
+            Console.WriteLine("SD Sequences");
+            foreach (var seq in planetaSD.Sequences)
+            {
+                // seq.EpisodeCount;
+                var res = outputXML.Sequences.Find(p => p.name.ToLowerInvariant() == seq.name.ToLowerInvariant());
+                if (res != null)
+                {
+                    continue;
+                }
+
+                outputXML.Sequences.Add(seq);
+            }
+
+
+            Console.WriteLine("SD Types");
+
+            foreach (var type in planetaSD.Types)
+            {
+                // seq.EpisodeCount;
+                var typeRes = outputXML.Types.Find(p => p.name.ToLowerInvariant() == type.name.ToLowerInvariant());
+                if (typeRes == null)
+                {
+                    outputXML.Types.Add(type);
+                    continue;
+                }
+
+                List<DataBoxExportTypeCategory> Categories = new List<DataBoxExportTypeCategory>();
+
+                Categories.AddRange(typeRes.category);
+                Categories.AddRange(type.category);
+
+                typeRes.category = Categories.Distinct().ToList();
+
+
+                List<DataBoxExportTypeGenre> Genres = new List<DataBoxExportTypeGenre>();
+
+                Genres.AddRange(typeRes.genre);
+                Genres.AddRange(type.genre);
+
+                typeRes.genre = Genres.Distinct().ToList();
+            }
+
+
+            uint cntr = 1;
+            uint missing = 0;
+            uint all_files = 0;
+
+
+            Console.WriteLine("SD Records");
+            foreach (DataBoxExportDataBoxRecord sdRec in planetaSD.DataBoxRecord)
             {
 
-                var mySerializer1 = new XmlSerializer(typeof(DataBoxExport));
+                //It doesn't exist
+                sdRec.clipid = string.Format("PLHD-{0:000000}", cntr); cntr++;
 
-                var planetaHDFile = new FileStream(@"C:\Users\Control1\Desktop\DATABOX_PLANETA_HD.xml", FileMode.Open);
-                // Call the Deserialize method and cast to the object type.
-                var planetaHD = (DataBoxExport)mySerializer1.Deserialize(planetaHDFile);
-                planetaHDFile.Close();
-
-
-                var planetaSDFile = new FileStream(@"C:\Users\Control1\Desktop\DATABOX_PLANETA_SD.xml", FileMode.Open);
-                // Call the Deserialize method and cast to the object type.
-                var mySerializer2 = new XmlSerializer(typeof(DataBoxExport));
-                var planetaSD = (DataBoxExport)mySerializer2.Deserialize(planetaSDFile);
-                planetaSDFile.Close();
-
-
-                DataBoxExport outputXML = new DataBoxExport();
-
-
-                foreach (var seq in planetaHD.Sequences)
+                if (!FixPath(ref sdRec.instancesField))
                 {
-                    // seq.EpisodeCount;
-                    var res = outputXML.Sequences.Find(p => p.name.ToLowerInvariant() == seq.name.ToLowerInvariant());
-                    if (res != null)
-                    {
-                        continue;
-                    }
+                    DataBoxExportDataBoxRecordKeyword k = new DataBoxExportDataBoxRecordKeyword();
+                    k.name = "FILE NOT FOUND";
+                    sdRec.Keywords.Add(k);
+                    missing++;
+                }
+                all_files++;
+                outputXML.DataBoxRecord.Add(sdRec);
+            }
 
-                    outputXML.Sequences.Add(seq);
+
+            Console.WriteLine("HD Records");
+            foreach (var hdRec in planetaHD.DataBoxRecord)
+            {
+                //Find if we have one of the filenames in the outputXML
+                //------------------------------------------------------
+
+                if (!FixPath(ref hdRec.instancesField))
+                {
+                    DataBoxExportDataBoxRecordKeyword k = new DataBoxExportDataBoxRecordKeyword
+                    {
+                        name = "FILE NOT FOUND"
+                    };
+                    hdRec.Keywords.Add(k);
+                    missing++;
                 }
 
-
-
-                foreach (var type in planetaHD.Types)
+                bool bAtleastOne = false;
+                foreach (var inst in hdRec.Instances)
                 {
-                    // seq.EpisodeCount;
-                    var typeRes = outputXML.Types.Find(p => p.name.ToLowerInvariant() == type.name.ToLowerInvariant());
-                    if (typeRes == null)
+                    foreach (var outRec in outputXML.DataBoxRecord)
                     {
-                        outputXML.Types.Add(type);
-                        continue;
-                    }
-
-                    List<DataBoxExportTypeCategory> Categories = new List<DataBoxExportTypeCategory>();
-
-                    Categories.AddRange(typeRes.category);
-                    Categories.AddRange(type.category);
-
-                    typeRes.category = Categories.Distinct().ToList();
-
-
-                    List<DataBoxExportTypeGenre> Genres = new List<DataBoxExportTypeGenre>();
-
-                    Genres.AddRange(typeRes.genre);
-                    Genres.AddRange(type.genre);
-
-                    typeRes.genre = Genres.Distinct().ToList();
-                }
-
-
-                // ======================================================= PLANETA SD
-
-                foreach (var seq in planetaSD.Sequences)
-                {
-                    // seq.EpisodeCount;
-                    var res = outputXML.Sequences.Find(p => p.name.ToLowerInvariant() == seq.name.ToLowerInvariant());
-                    if (res != null)
-                    {
-                        continue;
-                    }
-
-                    outputXML.Sequences.Add(seq);
-                }
-
-
-
-
-                foreach (var type in planetaSD.Types)
-                {
-                    // seq.EpisodeCount;
-                    var typeRes = outputXML.Types.Find(p => p.name.ToLowerInvariant() == type.name.ToLowerInvariant());
-                    if (typeRes == null)
-                    {
-                        outputXML.Types.Add(type);
-                        continue;
-                    }
-
-                    List<DataBoxExportTypeCategory> Categories = new List<DataBoxExportTypeCategory>();
-
-                    Categories.AddRange(typeRes.category);
-                    Categories.AddRange(type.category);
-
-                    typeRes.category = Categories.Distinct().ToList();
-
-
-                    List<DataBoxExportTypeGenre> Genres = new List<DataBoxExportTypeGenre>();
-
-                    Genres.AddRange(typeRes.genre);
-                    Genres.AddRange(type.genre);
-
-                    typeRes.genre = Genres.Distinct().ToList();
-                }
-
-
-                uint cntr = 1;
-                uint missing = 0;
-                uint all_files = 0;
-
-                foreach (DataBoxExportDataBoxRecord sdRec in planetaSD.DataBoxRecord)
-                {
-
-                    //It doesn't exist
-                    sdRec.clipid = string.Format("PLHD-{0:000000}", cntr); cntr++;
-
-                    if (!FixPath(ref sdRec.instancesField))
-                    {
-                        DataBoxExportDataBoxRecordKeyword k = new DataBoxExportDataBoxRecordKeyword();
-                        k.name = "FILE NOT FOUND";
-                        sdRec.Keywords.Add(k);
-                        missing++;
-                    }
-                    all_files++;
-                    outputXML.DataBoxRecord.Add(sdRec);
-                }
-
-
-
-                foreach (var hdRec in planetaHD.DataBoxRecord)
-                {
-                    //Find if we have one of the filenames in the outputXML
-                    //------------------------------------------------------
-
-                    if (!FixPath(ref hdRec.instancesField))
-                    {
-                        DataBoxExportDataBoxRecordKeyword k = new DataBoxExportDataBoxRecordKeyword
+                        bool bFound = false;
+                        foreach (var outInst in outRec.Instances)
                         {
-                            name = "FILE NOT FOUND"
-                        };
-                        hdRec.Keywords.Add(k);
-                        missing++;
-                    }
-
-                    bool bAtleastOne = false;
-                    foreach (var inst in hdRec.Instances)
-                    {
-                        foreach (var outRec in outputXML.DataBoxRecord)
-                        {
-                            bool bFound = false;
-                            foreach (var outInst in outRec.Instances)
+                            if (outInst.stream.FileName.ToUpperInvariant() == inst.stream.FileName.ToUpperInvariant())
                             {
-                                if (outInst.stream.FileName.ToUpperInvariant() == inst.stream.FileName.ToUpperInvariant())
-                                {
-                                    bAtleastOne = true;
-                                    bFound = true;
-                                    foreach (var custProps in hdRec.CustomProperties)
-                                    {
-                                        Console.WriteLine("FIX THE CUSTOM PROPS");
-                                    }
-
-                                }
+                                bAtleastOne = true;
+                                bFound = true;
+                                outRec.CustomProperties = hdRec.CustomProperties;
+                                break;
                             }
-                            if (bFound) break;
                         }
-
-                    }
-
-                    if (!bAtleastOne)
-                    {
-                        all_files++;
-                        outputXML.DataBoxRecord.Add(hdRec);
+                        if (bFound) break;
                     }
 
                 }
 
-
-
-
-                outputXML.Sequences.Sort(CompareSequences);
-                foreach (var type in outputXML.Types)
+                if (!bAtleastOne)
                 {
-                    type.category.Sort(CompareCategories);
-                    type.genre.Sort(CompareGenres);
+                    all_files++;
+                    outputXML.DataBoxRecord.Add(hdRec);
                 }
 
-                outputXML.Types.Sort(CompareTypes);
-
-                var myOutputSerializer = new XmlSerializer(typeof(DataBoxExport));
-
-                var outputFile = new FileStream(@"C:\Users\Control1\Desktop\DATABOX_OUTPUT.xml", FileMode.Create);
-                // Call the Deserialize method and cast to the object type.
-                myOutputSerializer.Serialize(outputFile, outputXML);
-
-                outputFile.Close();
             }
-            catch (Exception e)
+
+
+
+            Console.WriteLine("Sort Sequences");
+            outputXML.Sequences.Sort(CompareSequences);
+
+            Console.WriteLine("Sort Types");
+            foreach (var type in outputXML.Types)
             {
-                Console.WriteLine(e);
-                throw;
+                type.category.Sort(CompareCategories);
+                type.genre.Sort(CompareGenres);
             }
+
+            outputXML.Types.Sort(CompareTypes);
+
+
+
+
+
+uint filesProcessed = 0;
+            var all_recs = outputXML.DataBoxRecord.Count();
+
+            Console.WriteLine("Media Info");
+            foreach (var dbr in outputXML.DataBoxRecord)
+            {
+                foreach (var inst in dbr.Instances)
+                {
+                    filesProcessed++;
+                    inst.stream.Status = 1;
+                    inst.stream.StatusSpecified = true;
+                    if (string.IsNullOrWhiteSpace(inst.stream.LanguageID))
+                    {
+                        inst.stream.LanguageID = "Български";
+                    }
+                    if (inst.stream.FileSize > 0)
+                    {
+                        if (string.IsNullOrWhiteSpace(inst.stream.FileName))
+                        {
+                            Console.WriteLine("OOOPS");
+                            continue;
+                        }
+                        var fn = Path.GetFileName(inst.stream.FileName);
+                        if (fn != null)
+                        {
+                            Console.WriteLine($"Processing '{fn}' {filesProcessed} / {all_recs}");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Processing {} / {}", filesProcessed, all_recs);
+                        }
+                        try
+                        {
+                            MFReader reader = new MFReader();
+                            reader.ReaderOpen(inst.stream.FileName, "");
+                            reader.ReaderDurationGet(out double duration);
+                            reader.SourceFrameGetByNumber(0, -1, out MFFrame firstFrame, "");
+                            reader.SourceFrameGetByTime(duration + 10, -1, out MFFrame lastFrame, "");
+
+                            firstFrame.MFTimeGet(out M_TIME stTime);
+                            lastFrame.MFTimeGet(out M_TIME enTime);
+                            long frameDuration = stTime.rtEndTime - stTime.rtStartTime;
+                            uint seconds = (uint)((enTime.rtEndTime - stTime.rtStartTime) / 10000000);
+                            var frames = (uint)(((enTime.rtEndTime - stTime.rtStartTime) - ((long)seconds) * 10000000) / frameDuration);
+
+                            var tmp = seconds;
+                            uint h, m, s, f;
+                            h = seconds / 3600;
+                            seconds -= h * 3600;
+                            m = seconds / 60;
+                            seconds -= m * 60;
+                            s = seconds;
+                            f = frames;
+
+                            
+                            inst.duration = h | m << 8 | s << 16 | f << 24;
+                            inst.durationSpecified = true;
+                            inst.stream.OUT_P = inst.duration;
+                            dbr.duration = inst.duration;
+                            dbr.durationSpecified = true;
+
+                            firstFrame.MFAllGet(out MF_FRAME_INFO fi);
+                            inst.stream.Width = (uint)fi.avProps.vidProps.nWidth; 
+                            inst.stream.Height = (uint)fi.avProps.vidProps.nHeight;
+                            inst.stream.VideoBitrate = 50000000;
+                            inst.stream.SampleRate = (uint)fi.avProps.audProps.nSamplesPerSec;
+                            inst.stream.AudioBitRate = 384;
+                            inst.stream.Channels = (uint)fi.avProps.audProps.nChannels;
+                            inst.stream.FrameRate = (uint)fi.avProps.vidProps.dblRate;
+                            inst.stream.VCT = "MPEG-2";
+
+
+                            System.Runtime.InteropServices.Marshal.ReleaseComObject(firstFrame);
+                            System.Runtime.InteropServices.Marshal.ReleaseComObject(lastFrame);
+                            reader.ReaderClose();
+                            System.Runtime.InteropServices.Marshal.ReleaseComObject(reader);
+                        }
+                        catch (Exception)
+                        { }
+
+                    }
+                }
+            }
+
+
+            var myOutputSerializer = new XmlSerializer(typeof(DataBoxExport));
+
+            var outputFile = new FileStream(@"C:\Users\Control1\Desktop\DATABOX_OUTPUT.xml", FileMode.Create);
+            // Call the Deserialize method and cast to the object type.
+            myOutputSerializer.Serialize(outputFile, outputXML);
+
+            outputFile.Close();
+
 
             var endTime = DateTime.Now;
             Console.WriteLine($"End Time {endTime} ProcessingTime {(endTime - startTime).TotalSeconds}");

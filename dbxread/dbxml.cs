@@ -80,6 +80,7 @@ public partial class DataBoxExportDataBoxRecord
 
     private List<DataBoxExportDataBoxRecordCustomProperty> customPropertiesField = new List<DataBoxExportDataBoxRecordCustomProperty>();
 
+    [System.Xml.Serialization.XmlIgnoreAttribute()]
     public List<DataBoxExportDataBoxRecordInstance> instancesField = new List<DataBoxExportDataBoxRecordInstance>();
 
     private string clipidField;
@@ -104,7 +105,7 @@ public partial class DataBoxExportDataBoxRecord
 
     private string tagField;
 
-    private ushort receiptdateField;
+    private decimal receiptdateField;
 
     private string receiptdate_2Field;
 
@@ -122,7 +123,7 @@ public partial class DataBoxExportDataBoxRecord
 
     private string triviaField;
 
-    private ushort proddateField;
+    private decimal proddateField;
 
     private bool proddateFieldSpecified;
 
@@ -391,7 +392,7 @@ public partial class DataBoxExportDataBoxRecord
 
     /// <remarks/>
     [System.Xml.Serialization.XmlAttributeAttribute()]
-    public ushort receiptdate
+    public decimal receiptdate
     {
         get
         {
@@ -517,7 +518,7 @@ public partial class DataBoxExportDataBoxRecord
 
     /// <remarks/>
     [System.Xml.Serialization.XmlAttributeAttribute()]
-    public ushort proddate
+    public decimal proddate
     {
         get
         {
@@ -890,6 +891,22 @@ public partial class DataBoxExportDataBoxRecordCustomProperty
 
     private string valueField;
 
+    private uint typeField=0;
+
+    [System.Xml.Serialization.XmlAttributeAttribute()]
+    public uint type
+    {
+        get
+        {
+            return this.typeField;
+        }
+        set
+        {
+            this.typeField = value;
+        }
+    }
+
+
     /// <remarks/>
     [System.Xml.Serialization.XmlAttributeAttribute()]
     public string name
@@ -1037,6 +1054,11 @@ public partial class DataBoxExportDataBoxRecordInstanceStream
 
     private bool oUT_PFieldSpecified;
 
+    private uint width;
+
+    private uint height;
+    
+
     private string fileNameField;
 
     private byte mainField;
@@ -1051,6 +1073,123 @@ public partial class DataBoxExportDataBoxRecordInstanceStream
 
     private bool statusFieldSpecified;
 
+    private uint videoBitrate = 0;
+
+    private uint sampleRate = 48000;
+
+    private uint audioBitRate = 256;
+
+    private uint channels = 2;
+
+    private uint frameRate = 25;
+
+    private string vct = "UNK";
+
+
+    [System.Xml.Serialization.XmlAttribute("VCT")]
+    public string VCT
+    {
+        get
+        {
+            return this.vct;
+        }
+        set
+        {
+            this.vct = value;
+        }
+    }
+
+    [System.Xml.Serialization.XmlAttribute("FrameRate")]
+    public uint FrameRate
+    {
+        get
+        {
+            return this.frameRate;
+        }
+        set
+        {
+            this.frameRate = value;
+        }
+    }
+
+    [System.Xml.Serialization.XmlAttribute("Channels")]
+    public uint Channels
+    {
+        get
+        {
+            return this.channels;
+        }
+        set
+        {
+            this.channels = value;
+        }
+    }
+
+    [System.Xml.Serialization.XmlAttribute("AudioBitRate")]
+    public uint AudioBitRate
+    {
+        get
+        {
+            return this.audioBitRate;
+        }
+        set
+        {
+            this.audioBitRate = value;
+        }
+    }
+
+    [System.Xml.Serialization.XmlAttribute("SampleRate")]
+    public uint SampleRate
+    {
+        get
+        {
+            return this.sampleRate;
+        }
+        set
+        {
+            this.sampleRate = value;
+        }
+    }
+
+    [System.Xml.Serialization.XmlAttribute("VideoBitrate")]
+    public uint VideoBitrate
+    {
+        get
+        {
+            return this.videoBitrate;
+        }
+        set
+        {
+            this.videoBitrate = value;
+        }
+    }
+
+    [System.Xml.Serialization.XmlAttribute("Width")]
+    public uint Width
+    {
+        get
+        {
+            return this.width;
+        }
+        set
+        {
+            this.width = value;
+        }
+    }
+
+
+    [System.Xml.Serialization.XmlAttribute("Height")]
+    public uint Height
+    {
+        get
+        {
+            return this.height;
+        }
+        set
+        {
+            this.height = value;
+        }
+    }
     /// <remarks/>
     public DataBoxExportDataBoxRecordInstanceStreamMedia media
     {
