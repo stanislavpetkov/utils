@@ -17,13 +17,13 @@ namespace DbxRead
 
             var mySerializer1 = new XmlSerializer(typeof(DataBoxExport));
 
-            var planetaHDFile = new FileStream(@"C:\Users\Control1\Desktop\PLANETA_HD_2.xml", FileMode.Open);
+            var planetaHDFile = new FileStream(@"C:\Users\Control1\Desktop\PLANETA_HD_3.xml", FileMode.Open);
             // Call the Deserialize method and cast to the object type.
             var planetaHD = (DataBoxExport)mySerializer1.Deserialize(planetaHDFile);
             planetaHDFile.Close();
 
 
-            var planetaSDFile = new FileStream(@"C:\Users\Control1\Desktop\PLANETA_SD_2.xml", FileMode.Open);
+            var planetaSDFile = new FileStream(@"C:\Users\Control1\Desktop\PLANETA_SD_3.xml", FileMode.Open);
             // Call the Deserialize method and cast to the object type.
             var mySerializer2 = new XmlSerializer(typeof(DataBoxExport));
             var planetaSD = (DataBoxExport)mySerializer2.Deserialize(planetaSDFile);
