@@ -162,7 +162,7 @@ namespace DbxRead
                     hdRec.Keywords.Add(k);
                     missing++;
                 }
-
+                hdRec.clipid = string.Format("PLHD-{0:000000}", cntr); cntr++;
                 bool bAtleastOne = false;
                 foreach (var inst in hdRec.Instances)
                 {
@@ -176,7 +176,7 @@ namespace DbxRead
                                 bAtleastOne = true;
                                 bFound = true;
                                 outRec.CustomProperties = hdRec.CustomProperties;
-                                hdRec.clipid = string.Format("PLHD-{0:000000}", cntr); cntr++;
+                                
                                 break;
                             }
                         }
