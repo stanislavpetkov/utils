@@ -133,6 +133,8 @@ namespace DbxRead
                 //It doesn't exist
                 sdRec.clipid = string.Format("PLHD-{0:000000}", cntr); cntr++;
 
+                sdRec.CustomProperties.Clear(); //REMOVE SD custom Props
+
                 if (!FixPath(ref sdRec.instancesField))
                 {
                     DataBoxExportDataBoxRecordKeyword k = new DataBoxExportDataBoxRecordKeyword();
@@ -150,7 +152,7 @@ namespace DbxRead
             {
                 //Find if we have one of the filenames in the outputXML
                 //------------------------------------------------------
-
+                
                 if (!FixPath(ref hdRec.instancesField))
                 {
                     DataBoxExportDataBoxRecordKeyword k = new DataBoxExportDataBoxRecordKeyword
@@ -174,6 +176,7 @@ namespace DbxRead
                                 bAtleastOne = true;
                                 bFound = true;
                                 outRec.CustomProperties = hdRec.CustomProperties;
+                                hdRec.clipid = string.Format("PLHD-{0:000000}", cntr); cntr++;
                                 break;
                             }
                         }
@@ -293,7 +296,33 @@ uint filesProcessed = 0;
             }
 
 
-            var myOutputSerializer = new XmlSerializer(typeof(DataBoxExport));
+
+            //sdRec.CustomProperties
+            Console.WriteLine("Media Info");
+            foreach (var dbr in outputXML.DataBoxRecord)
+            {
+                if (dbr.CustomProperties.Count<1)
+                {
+                    DataBoxExportDataBoxRecordKeyword k = new DataBoxExportDataBoxRecordKeyword
+                    {
+                        name = "NO CUST PROPS"
+                    };
+                    dbr.Keywords.Add(k);
+                    continue;
+                }
+
+
+                if (dbr.CustomProperties.Any(p => string.IsNullOrWhiteSpace(p.value)))
+                {
+                    DataBoxExportDataBoxRecordKeyword k = new DataBoxExportDataBoxRecordKeyword
+                    {
+                        name = "EMPTY CUST PROPS"
+                    };
+                    dbr.Keywords.Add(k);
+                }
+            }
+
+                var myOutputSerializer = new XmlSerializer(typeof(DataBoxExport));
 
             var outputFile = new FileStream(@"C:\Users\Control1\Desktop\DATABOX_OUTPUT.xml", FileMode.Create);
             // Call the Deserialize method and cast to the object type.

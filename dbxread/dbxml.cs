@@ -1151,7 +1151,7 @@ public partial class DataBoxExportDataBoxRecordInstanceStream
         }
     }
 
-    [System.Xml.Serialization.XmlAttribute("VideoBitrate")]
+    [System.Xml.Serialization.XmlAttribute("VideoBitRate")]
     public uint VideoBitrate
     {
         get
