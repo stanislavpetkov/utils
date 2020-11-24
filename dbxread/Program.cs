@@ -9,7 +9,83 @@ namespace DbxRead
 {
     class Program
     {
+
         public static void Main(string[] args)
+        {
+            //JoinHDandSDXMLs();
+
+            
+
+            var srcLocation = @"\\Storage2\Planeta HD\";
+
+            var files = Directory.GetFiles(srcLocation, "*.*", SearchOption.AllDirectories);
+
+
+            Console.WriteLine(files.Length);
+
+
+
+            var mySerializer1 = new XmlSerializer(typeof(DataBoxExport));
+
+            var sourcefile = new FileStream(@"C:\Users\Control1\Desktop\DATABOX_3518.xml", FileMode.Open);
+            // Call the Deserialize method and cast to the object type.
+            var srcDB = (DataBoxExport)mySerializer1.Deserialize(sourcefile);
+            sourcefile.Close();
+
+
+
+            for (int i = 0; i < files.Length; i++)
+            {
+                files[i] = files[i].ToLowerInvariant();
+            }
+            
+                List<string> xmlFiles = new List<string>();
+            foreach(var elm in srcDB.DataBoxRecord)
+            {
+                foreach (var inst in elm.Instances)
+                {
+                    xmlFiles.Add(inst.stream.FileName.ToLowerInvariant());
+                }
+            }
+
+
+            List<string> filesThatDontExistOnStorage = new List<string>();
+            List<string> filesThatDontExistOnDB = new List<string>();
+
+            foreach(var storFile in files)
+            {
+                if (!xmlFiles.Any(p => p == storFile)) filesThatDontExistOnDB.Add(storFile);
+            }
+
+
+            foreach (var xmlfile in xmlFiles)
+            {
+                if (!files.Any(p => p == xmlfile)) filesThatDontExistOnStorage.Add(xmlfile);
+            }
+
+
+            {
+                TextWriter tw = new StreamWriter("filesThatDontExistOnDB.txt");
+
+                foreach (String s in filesThatDontExistOnDB)
+                    tw.WriteLine(s);
+
+                tw.Close();
+            }
+
+            {
+                TextWriter tw = new StreamWriter("filesThatDontExistOnStorage.txt");
+
+                foreach (String s in filesThatDontExistOnStorage)
+                    tw.WriteLine(s);
+
+                tw.Close();
+            }
+
+
+        }
+
+        public void JoinHDandSDXMLs()
         {
             var startTime = DateTime.Now;
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
@@ -152,7 +228,7 @@ namespace DbxRead
             {
                 //Find if we have one of the filenames in the outputXML
                 //------------------------------------------------------
-                
+
                 if (!FixPath(ref hdRec.instancesField))
                 {
                     DataBoxExportDataBoxRecordKeyword k = new DataBoxExportDataBoxRecordKeyword
@@ -176,7 +252,7 @@ namespace DbxRead
                                 bAtleastOne = true;
                                 bFound = true;
                                 outRec.CustomProperties = hdRec.CustomProperties;
-                                
+
                                 break;
                             }
                         }
@@ -211,7 +287,7 @@ namespace DbxRead
 
 
 
-uint filesProcessed = 0;
+            uint filesProcessed = 0;
             var all_recs = outputXML.DataBoxRecord.Count();
 
             Console.WriteLine("Media Info");
@@ -265,7 +341,7 @@ uint filesProcessed = 0;
                             s = seconds;
                             f = frames;
 
-                            
+
                             inst.duration = h | m << 8 | s << 16 | f << 24;
                             inst.durationSpecified = true;
                             inst.stream.OUT_P = inst.duration;
@@ -273,7 +349,7 @@ uint filesProcessed = 0;
                             dbr.durationSpecified = true;
 
                             firstFrame.MFAllGet(out MF_FRAME_INFO fi);
-                            inst.stream.Width = (uint)fi.avProps.vidProps.nWidth; 
+                            inst.stream.Width = (uint)fi.avProps.vidProps.nWidth;
                             inst.stream.Height = (uint)fi.avProps.vidProps.nHeight;
                             inst.stream.VideoBitrate = 50000000;
                             inst.stream.SampleRate = (uint)fi.avProps.audProps.nSamplesPerSec;
@@ -301,7 +377,7 @@ uint filesProcessed = 0;
             Console.WriteLine("Media Info");
             foreach (var dbr in outputXML.DataBoxRecord)
             {
-                if (dbr.CustomProperties.Count<1)
+                if (dbr.CustomProperties.Count < 1)
                 {
                     DataBoxExportDataBoxRecordKeyword k = new DataBoxExportDataBoxRecordKeyword
                     {
@@ -322,7 +398,7 @@ uint filesProcessed = 0;
                 }
             }
 
-                var myOutputSerializer = new XmlSerializer(typeof(DataBoxExport));
+            var myOutputSerializer = new XmlSerializer(typeof(DataBoxExport));
 
             var outputFile = new FileStream(@"C:\Users\Control1\Desktop\DATABOX_OUTPUT.xml", FileMode.Create);
             // Call the Deserialize method and cast to the object type.
@@ -335,6 +411,7 @@ uint filesProcessed = 0;
             Console.WriteLine($"End Time {endTime} ProcessingTime {(endTime - startTime).TotalSeconds}");
             Console.WriteLine("Done");
         }
+        
 
 
         //return false if file not found
