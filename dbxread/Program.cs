@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 using MFORMATSLib;
+
+
 namespace DbxRead
 {
     class Program
@@ -14,7 +16,7 @@ namespace DbxRead
         {
             //JoinHDandSDXMLs();
 
-
+            MFormatsSDKLic.IntializeProtection();
 
 
 
@@ -22,7 +24,7 @@ namespace DbxRead
 
             var mySerializer1 = new XmlSerializer(typeof(DataBoxExport));
 
-            var sourcefile = new FileStream(@"C:\Users\sunny\Desktop\DATABOX_PLANETA_FOLK_SD_16x9.xml", FileMode.Open);
+            var sourcefile = new FileStream(@"C:\Users\Control1\Desktop\DATABOX_PLANETA_FOLK_SD_16x9.xml", FileMode.Open);
             // Call the Deserialize method and cast to the object type.
             var srcDB = (DataBoxExport)mySerializer1.Deserialize(sourcefile);
             sourcefile.Close();
@@ -181,15 +183,18 @@ namespace DbxRead
 
                             if (OperatingSystem.IsWindows())
                             {
-                                System.Runtime.InteropServices.Marshal.ReleaseComObject(props);
+                                
+                                //System.Runtime.InteropServices.Marshal.Release(props);                                
                                 System.Runtime.InteropServices.Marshal.ReleaseComObject(firstFrame);
                                 System.Runtime.InteropServices.Marshal.ReleaseComObject(lastFrame);
                                 reader.ReaderClose();
                                 System.Runtime.InteropServices.Marshal.ReleaseComObject(reader);
                             }
                         }
-                        catch (Exception)
-                        { }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine($"Exception {e.Message}");
+                        }
 
                     }
                 }
@@ -200,7 +205,7 @@ namespace DbxRead
             //sdRec.CustomProperties
             Console.WriteLine("Media Info");
 
-            var sourcefileOut = new FileStream(@"C:\Users\sunny\Desktop\DATABOX_PLANETA_FOLK_HD.xml", FileMode.Create);
+            var sourcefileOut = new FileStream(@"C:\Users\Control1\Desktop\DATABOX_PLANETA_FOLK_HD.xml", FileMode.Create);
             mySerializer1.Serialize(sourcefileOut, srcDB);
             sourcefileOut.Close();
 
