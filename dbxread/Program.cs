@@ -14,53 +14,223 @@ namespace DbxRead
         {
             //JoinHDandSDXMLs();
 
-            
-
-            var srcLocation = @"\\Storage2\Planeta HD\";
-
-            var files = Directory.GetFiles(srcLocation, "*.*", SearchOption.AllDirectories);
 
 
-            Console.WriteLine(files.Length);
+
 
 
 
             var mySerializer1 = new XmlSerializer(typeof(DataBoxExport));
 
-            var sourcefile = new FileStream(@"C:\Users\Control1\Desktop\DATABOX_3518.xml", FileMode.Open);
+            var sourcefile = new FileStream(@"C:\Users\sunny\Desktop\DATABOX_PLANETA_FOLK_SD_16x9.xml", FileMode.Open);
             // Call the Deserialize method and cast to the object type.
             var srcDB = (DataBoxExport)mySerializer1.Deserialize(sourcefile);
             sourcefile.Close();
 
 
 
-            for (int i = 0; i < files.Length; i++)
+
+
+            var srcLocation = @"\\192.168.10.252\Planeta HD\";
+
+            var files_all = Directory.GetFiles(srcLocation, "*.*", SearchOption.AllDirectories);
+
+
+
+
+            string[] files = files_all.Where(p => Path.GetFileName(p).First() != '.').ToArray();
+
+            Console.WriteLine($"Files on {srcLocation} - {files.Length}");
+
+
+
+            foreach (var elm in srcDB.DataBoxRecord)
             {
-                files[i] = files[i].ToLowerInvariant();
-            }
-            
-                List<string> xmlFiles = new List<string>();
-            foreach(var elm in srcDB.DataBoxRecord)
-            {
+                bool Found = false;
                 foreach (var inst in elm.Instances)
+                {
+
+
+                    string fn = files.FirstOrDefault(p => Path.GetFileName(p.ToLowerInvariant()) == Path.GetFileName(inst.stream.FileName.ToLowerInvariant()));
+                    if (!string.IsNullOrWhiteSpace(fn))
+                    {
+                        inst.stream.media.Pool = srcLocation;
+                        inst.stream.media.MediaName = "Planeta Folk HD";
+
+
+                        FileInfo fi = new FileInfo(fn);
+                        inst.stream.FileSize = fi.Length;
+                        inst.stream.FileName = fn;
+                        Found = true;
+                    }
+                    else
+                    {
+                        inst.stream.media.Pool = srcLocation;
+                        inst.stream.media.MediaName = "Planeta Folk HD";
+                        //inst.stream.FileName - keep the original
+                        inst.stream.FileSize = 0;
+                        Found = false;
+                    }
+                }
+
+                if (!Found)
+                {
+
+
+                    DataBoxExportDataBoxRecordKeyword k = new()
+                    {
+                        name = "FILE NOT FOUND"
+                    };
+                    elm.Keywords.Add(k);
+                }
+            }
+
+
+            var all_recs = srcDB.DataBoxRecord.Count();
+            ulong filesProcessed = 0;
+            Console.WriteLine("Media Info");
+            foreach (var dbr in srcDB.DataBoxRecord)
+            {
+                foreach (var inst in dbr.Instances)
+                {
+                    filesProcessed++;
+                    inst.stream.Status = 1;
+                    inst.stream.StatusSpecified = true;
+                    if (string.IsNullOrWhiteSpace(inst.stream.LanguageID))
+                    {
+                        inst.stream.LanguageID = "Български";
+                    }
+                    if (inst.stream.FileSize > 0)
+                    {
+                        if (string.IsNullOrWhiteSpace(inst.stream.FileName))
+                        {
+                            Console.WriteLine("OOOPS");
+                            continue;
+                        }
+                        var fn = Path.GetFileName(inst.stream.FileName);
+                        if (fn != null)
+                        {
+                            Console.WriteLine($"Processing '{fn}' {filesProcessed} / {all_recs}");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Processing {} / {}", filesProcessed, all_recs);
+                        }
+                        try
+                        {
+                            MFReader reader = new();
+
+
+                            reader.ReaderOpen(inst.stream.FileName, "");
+                            reader.ReaderDurationGet(out double duration);
+                            reader.SourceFrameGetByNumber(0, -1, out MFFrame firstFrame, "");
+                            reader.SourceFrameGetByTime(duration + 10, -1, out MFFrame lastFrame, "");
+
+                            firstFrame.MFTimeGet(out M_TIME stTime);
+                            lastFrame.MFTimeGet(out M_TIME enTime);
+                            long frameDuration = stTime.rtEndTime - stTime.rtStartTime;
+                            uint seconds = (uint)((enTime.rtEndTime - stTime.rtStartTime) / 10000000);
+                            var frames = (uint)(((enTime.rtEndTime - stTime.rtStartTime) - ((long)seconds) * 10000000) / frameDuration);
+
+                            var tmp = seconds;
+                            uint h, m, s, f;
+                            h = seconds / 3600;
+                            seconds -= h * 3600;
+                            m = seconds / 60;
+                            seconds -= m * 60;
+                            s = seconds;
+                            f = frames;
+
+
+                            inst.duration = h | m << 8 | s << 16 | f << 24;
+                            inst.durationSpecified = true;
+                            inst.stream.OUT_P = inst.duration;
+                            dbr.duration = inst.duration;
+                            dbr.durationSpecified = true;
+
+                            var props = reader as IMFProps;
+
+
+                            
+                            props.PropsGet("info::video.0::codec_name", out var vcodecName);
+                            props.PropsGet("info::video.0::bit_rate", out var vBitRate);
+                            if (!uint.TryParse(vBitRate, out var videoBitRate))
+                            {
+                                videoBitRate = 0;
+                            }
+
+                            props.PropsGet("info::audio.0::codec_name", out var acodecName);
+
+                            props.PropsGet("info::audio.0::bit_rate", out var aBitRate);
+                            if (!uint.TryParse(aBitRate, out var audioBitRate))
+                            {
+                                audioBitRate = 0;
+                            }
+
+
+                            firstFrame.MFAllGet(out MF_FRAME_INFO fi);
+                            inst.stream.Width = (uint)fi.avProps.vidProps.nWidth;
+                            inst.stream.Height = (uint)fi.avProps.vidProps.nHeight;
+                            inst.stream.VideoBitrate = videoBitRate;
+                            inst.stream.SampleRate = (uint)fi.avProps.audProps.nSamplesPerSec;
+                            inst.stream.AudioBitRate = audioBitRate / 1000;
+                            inst.stream.Channels = (uint)fi.avProps.audProps.nChannels;
+                            inst.stream.FrameRate = (uint)fi.avProps.vidProps.dblRate;
+                            inst.stream.VCT = vcodecName;
+                            inst.stream.ACT = acodecName;
+
+                            if (OperatingSystem.IsWindows())
+                            {
+                                System.Runtime.InteropServices.Marshal.ReleaseComObject(props);
+                                System.Runtime.InteropServices.Marshal.ReleaseComObject(firstFrame);
+                                System.Runtime.InteropServices.Marshal.ReleaseComObject(lastFrame);
+                                reader.ReaderClose();
+                                System.Runtime.InteropServices.Marshal.ReleaseComObject(reader);
+                            }
+                        }
+                        catch (Exception)
+                        { }
+
+                    }
+                }
+            }
+
+
+
+            //sdRec.CustomProperties
+            Console.WriteLine("Media Info");
+
+            var sourcefileOut = new FileStream(@"C:\Users\sunny\Desktop\DATABOX_PLANETA_FOLK_HD.xml", FileMode.Create);
+            mySerializer1.Serialize(sourcefileOut, srcDB);
+            sourcefileOut.Close();
+
+
+
+
+
+            List<string> xmlFiles = new List<string>();
+
+            foreach (var dbr in srcDB.DataBoxRecord)
+            {
+                foreach (var inst in dbr.Instances)
                 {
                     xmlFiles.Add(inst.stream.FileName.ToLowerInvariant());
                 }
             }
 
-
-            List<string> filesThatDontExistOnStorage = new List<string>();
+                    List<string> filesThatDontExistOnStorage = new List<string>();
             List<string> filesThatDontExistOnDB = new List<string>();
 
-            foreach(var storFile in files)
+            foreach (var storFile in files)
             {
-                if (!xmlFiles.Any(p => p == storFile)) filesThatDontExistOnDB.Add(storFile);
+                var fileName = Path.GetFileName(storFile);
+                if (!xmlFiles.Any(p => p == fileName)) filesThatDontExistOnDB.Add(storFile);
             }
 
 
             foreach (var xmlfile in xmlFiles)
             {
-                if (!files.Any(p => p == xmlfile)) filesThatDontExistOnStorage.Add(xmlfile);
+                if (!files.Any(p => Path.GetFileName(p) == xmlfile)) xmlFiles.Add(xmlfile);
             }
 
 
@@ -76,7 +246,7 @@ namespace DbxRead
             {
                 TextWriter tw = new StreamWriter("filesThatDontExistOnStorage.txt");
 
-                foreach (String s in filesThatDontExistOnStorage)
+                foreach (String s in xmlFiles)
                     tw.WriteLine(s);
 
                 tw.Close();
@@ -358,11 +528,13 @@ namespace DbxRead
                             inst.stream.FrameRate = (uint)fi.avProps.vidProps.dblRate;
                             inst.stream.VCT = "MPEG-2";
 
-
-                            System.Runtime.InteropServices.Marshal.ReleaseComObject(firstFrame);
-                            System.Runtime.InteropServices.Marshal.ReleaseComObject(lastFrame);
-                            reader.ReaderClose();
-                            System.Runtime.InteropServices.Marshal.ReleaseComObject(reader);
+                            if (OperatingSystem.IsWindows())
+                            {
+                                System.Runtime.InteropServices.Marshal.ReleaseComObject(firstFrame);
+                                System.Runtime.InteropServices.Marshal.ReleaseComObject(lastFrame);
+                                reader.ReaderClose();
+                                System.Runtime.InteropServices.Marshal.ReleaseComObject(reader);
+                            }
                         }
                         catch (Exception)
                         { }
@@ -411,7 +583,7 @@ namespace DbxRead
             Console.WriteLine($"End Time {endTime} ProcessingTime {(endTime - startTime).TotalSeconds}");
             Console.WriteLine("Done");
         }
-        
+
 
 
         //return false if file not found

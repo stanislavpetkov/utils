@@ -1,16 +1,31 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dbxread", "dbxread.csproj", "{1ECDCF4B-6726-4297-B955-E52B7CA51965}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbxread", "dbxread.csproj", "{1ECDCF4B-6726-4297-B955-E52B7CA51965}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
 		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{1ECDCF4B-6726-4297-B955-E52B7CA51965}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1ECDCF4B-6726-4297-B955-E52B7CA51965}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1ECDCF4B-6726-4297-B955-E52B7CA51965}.Debug|x64.ActiveCfg = Debug|x64
+		{1ECDCF4B-6726-4297-B955-E52B7CA51965}.Debug|x64.Build.0 = Debug|x64
 		{1ECDCF4B-6726-4297-B955-E52B7CA51965}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1ECDCF4B-6726-4297-B955-E52B7CA51965}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1ECDCF4B-6726-4297-B955-E52B7CA51965}.Release|x64.ActiveCfg = Release|x64
+		{1ECDCF4B-6726-4297-B955-E52B7CA51965}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C6187FC8-85FC-4477-B468-ECDFD98A358B}
 	EndGlobalSection
 EndGlobal

@@ -1099,6 +1099,23 @@ public partial class DataBoxExportDataBoxRecordInstanceStream
         }
     }
 
+
+    private string act = "UNK";
+
+
+    [System.Xml.Serialization.XmlAttribute("ACT")]
+    public string ACT
+    {
+        get
+        {
+            return this.act;
+        }
+        set
+        {
+            this.act = value;
+        }
+    }
+
     [System.Xml.Serialization.XmlAttribute("FrameRate")]
     public uint FrameRate
     {
