@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
+using dbxread;
+using FirebirdSql.Data.Logging;
 using MFORMATSLib;
 
 
@@ -69,7 +71,7 @@ namespace DbxRead
                 id++;
             }
 
-                foreach (var elm in srcDB.DataBoxRecord)
+            foreach (var elm in srcDB.DataBoxRecord)
             {
                 bool Found = false;
                 foreach (var inst in elm.Instances)
@@ -112,17 +114,36 @@ namespace DbxRead
                 }
             }
 
-            foreach (var dbr in srcDB.Types)
+
+            var muzika = srcDB.Types.First(p => p.name == "16x9 МУЗИКА - ФОЛК");
+            var new_muzika = muzika.DeepCopy();
+            new_muzika.name = "МУЗИКА - ФОЛК";
+
+            foreach (var item in new_muzika.category)
             {
-                if (dbr.name == "16x9 МУЗИКА - ФОЛК")
-                {
-                    dbr.name = "МУЗИКА - ФОЛК";
-                }
-                else if (dbr.name == "16x9 КАШОВЕ - ФОЛК")
-                {
-                    dbr.name = "КАШОВЕ - ФОЛК";
-                }
+                if (item.name == "Music Video Live-") item.name = "Music Video Live";
+                if (item.name == "Music Videos-") item.name = "Music Video";
             }
+
+            foreach (var item in muzika.genre)
+            {
+                item.name = item.name + " -";
+            }
+
+            srcDB.Types.Add(new_muzika);
+
+
+            var kashove = srcDB.Types.First(p => p.name == "16x9 КАШОВЕ - ФОЛК");
+            var new_kashove = kashove.DeepCopy();
+            new_kashove.name = "КАШОВЕ - ФОЛК";
+
+            foreach (var item in kashove.genre)
+            {
+                item.name = item.name + " -";
+            }
+
+            srcDB.Types.Add(new_kashove);
+
             var all_recs = srcDB.DataBoxRecord.Count;
             ulong filesProcessed = 0;
             Console.WriteLine("Media Info");
@@ -131,27 +152,6 @@ namespace DbxRead
 
             foreach (var dbr in srcDB.DataBoxRecord)
             {
-
-
-                if (string.IsNullOrWhiteSpace(dbr.category))
-                {
-                    dbr.category = "NO CATEGORY!!!";
-                }
-                else
-                {
-                    dbr.category = dbr.category.Trim();
-                    while ((dbr.category.Last() == '-') || (dbr.category.Last() == ' '))
-                    {
-                        dbr.category = dbr.category.Substring(startIndex: 0, dbr.category.Length - 1);
-                        if (string.IsNullOrWhiteSpace(dbr.category))
-                        {
-                            dbr.category = "NO CATEGORY!!!";
-                            break;
-                        }
-                    }
-                }
-
-
                 foreach (var inst in dbr.Instances)
                 {
                     filesProcessed++;
@@ -161,126 +161,209 @@ namespace DbxRead
                     {
                         inst.stream.LanguageID = "Български";
                     }
-                    if (inst.stream.FileSize > 0)
+                    if (inst.stream.FileSize == 0)
                     {
-
-
-                        if (string.IsNullOrWhiteSpace(inst.stream.FileName))
+                        foreach (var item in dbr.Genres)
                         {
-                            Console.WriteLine("OOOPS");
-                            continue;
-                        }
-                        var fn = Path.GetFileName(inst.stream.FileName);
-                        if (fn != null)
-                        {
-                            Console.WriteLine($"Processing '{fn}' {filesProcessed} / {all_recs}");
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Processing {filesProcessed} / {all_recs}");
-                        }
-                        try
-                        {
-                            var reader = new MFReader();
-
-
-                            reader.ReaderOpen(inst.stream.FileName, "");
-                            reader.ReaderDurationGet(out double duration);
-                            reader.SourceFrameGetByNumber(0, -1, out MFFrame firstFrame, "");
-                            reader.SourceFrameGetByTime(duration + 10, -1, out MFFrame lastFrame, "");
-
-                            firstFrame.MFTimeGet(out M_TIME stTime);
-                            lastFrame.MFTimeGet(out M_TIME enTime);
-                            long frameDuration = stTime.rtEndTime - stTime.rtStartTime;
-                            uint seconds = (uint)((enTime.rtEndTime - stTime.rtStartTime) / 10000000);
-                            var frames = (uint)(((enTime.rtEndTime - stTime.rtStartTime) - ((long)seconds) * 10000000) / frameDuration);
-
-                            var tmp = seconds;
-                            uint h, m, s, f;
-                            h = seconds / 3600;
-                            seconds -= h * 3600;
-                            m = seconds / 60;
-                            seconds -= m * 60;
-                            s = seconds;
-                            f = frames;
-
-
-                            inst.duration = h | m << 8 | s << 16 | f << 24;
-                            inst.durationSpecified = true;
-                            inst.stream.OUT_P = inst.duration;
-                            dbr.duration = inst.duration;
-                            dbr.durationSpecified = true;
-
-                            var props = reader as IMFProps;
-
-
-
-
-
-                            props.PropsGet("info::video.0::codec_name", out var vcodecName);
-                            props.PropsGet("info::video.0::bit_rate", out var vBitRate);
-                            if (!uint.TryParse(vBitRate, out var videoBitRate))
-                            {
-                                videoBitRate = 0;
-                            }
-
-                            props.PropsGet("info::audio.0::codec_name", out var acodecName);
-
-                            props.PropsGet("info::audio.0::bit_rate", out var aBitRate);
-                            if (!uint.TryParse(aBitRate, out var audioBitRate))
-                            {
-                                audioBitRate = 0;
-                            }
-
-
-                            firstFrame.MFAllGet(out MF_FRAME_INFO fi);
-
-                            string Suffix = (fi.avProps.vidProps.nWidth == 1920) ? "HD" :
-                                (fi.avProps.vidProps.nWidth == 3840) ? "4K" :
-                                (fi.avProps.vidProps.nWidth == 720) ? $"SD {fi.avProps.vidProps.nAspectX}x{fi.avProps.vidProps.nAspectY}" :
-                                $"{fi.avProps.vidProps.nWidth}x{fi.avProps.vidProps.nHeight}";
-
-
-
-                            if (dbr.type == "16x9 МУЗИКА - ФОЛК")
-                            {
-                                dbr.type = $"МУЗИКА - ФОЛК";
-                            }
-                            else if (dbr.type == "16x9 КАШОВЕ - ФОЛК")
-                            {
-                                dbr.type = $"КАШОВЕ - ФОЛК";
-                            }
-
-
-
-
-                            inst.stream.Width = (uint)fi.avProps.vidProps.nWidth;
-                            inst.stream.Height = (uint)fi.avProps.vidProps.nHeight;
-                            inst.stream.VideoBitrate = videoBitRate;
-                            inst.stream.SampleRate = (uint)fi.avProps.audProps.nSamplesPerSec;
-                            inst.stream.AudioBitRate = audioBitRate / 1000;
-                            inst.stream.Channels = (uint)fi.avProps.audProps.nChannels;
-                            inst.stream.FrameRate = (uint)fi.avProps.vidProps.dblRate;
-                            inst.stream.VCT = vcodecName;
-                            inst.stream.ACT = acodecName;
-
-                            if (OperatingSystem.IsWindows())
-                            {
-
-                                //System.Runtime.InteropServices.Marshal.Release(props);                                
-                                System.Runtime.InteropServices.Marshal.ReleaseComObject(firstFrame);
-                                System.Runtime.InteropServices.Marshal.ReleaseComObject(lastFrame);
-                                reader.ReaderClose();
-                                System.Runtime.InteropServices.Marshal.ReleaseComObject(reader);
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            Console.WriteLine($"Exception {e.Message}");
+                            item.name = item.name + " -";
                         }
 
+                        
+                        continue;
                     }
+
+
+
+                    if (string.IsNullOrWhiteSpace(inst.stream.FileName))
+                    {
+                        Console.WriteLine("OOOPS");
+                        continue;
+                    }
+                    var fn = Path.GetFileName(inst.stream.FileName);
+                    if (fn != null)
+                    {
+                        Console.WriteLine($"Processing '{fn}' {filesProcessed} / {all_recs}");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Processing {filesProcessed} / {all_recs}");
+                        continue;
+                    }
+                    try
+                    {
+                        var reader = new MFReader();
+
+
+                        reader.ReaderOpen(inst.stream.FileName, "");
+                        reader.ReaderDurationGet(out double duration);
+                        reader.SourceFrameGetByNumber(0, -1, out MFFrame firstFrame, "");
+
+                        reader.SourceFrameGetByTime(duration - 0.1, -1, out MFFrame lastFrame, "");
+
+                        M_TIME enTime = new M_TIME();
+                        while (true)
+                        {
+
+
+                            if (lastFrame != null)
+                            {
+                                lastFrame.MFTimeGet(out enTime);
+                                if ((enTime.eFFlags & eMFrameFlags.eMFF_Last) == eMFrameFlags.eMFF_Last)
+                                {
+
+                                    //this is the last frame 
+                                    break;
+                                }
+                                reader.SourceFrameGet(-1, out lastFrame, "");
+                            }
+                            else
+                            {
+                                if (OperatingSystem.IsWindows())
+                                {
+
+                                    //System.Runtime.InteropServices.Marshal.Release(props);                                
+                                    System.Runtime.InteropServices.Marshal.ReleaseComObject(firstFrame);
+                                    System.Runtime.InteropServices.Marshal.ReleaseComObject(lastFrame);
+                                    reader.ReaderClose();
+                                    System.Runtime.InteropServices.Marshal.ReleaseComObject(reader);
+                                }
+                                throw new Exception("Can not get Frame");
+                            }
+
+                        }
+
+
+
+
+                        firstFrame.MFTimeGet(out M_TIME stTime);
+
+
+                        if ((enTime.rtEndTime - stTime.rtStartTime) < 30000000)
+                        {
+                            Console.WriteLine("!!!!Duration issue!!!!");
+
+
+
+
+                            dbr.Keywords.Add(new DataBoxExportDataBoxRecordKeyword()
+                            {
+                                name = "!!! CHECK_DURATION !!!"
+                            });
+
+                            stTime.rtStartTime = 0;
+                            enTime.rtEndTime = Convert.ToInt64(Math.Round(duration * 10000000));
+                        }
+
+
+                        long frameDuration = stTime.rtEndTime - stTime.rtStartTime;
+                        uint seconds = (uint)((enTime.rtEndTime - stTime.rtStartTime) / 10000000);
+                        var frames = (uint)(((enTime.rtEndTime - stTime.rtStartTime) - ((long)seconds) * 10000000) / frameDuration);
+
+
+
+
+                        var tmp = seconds;
+                        uint h, m, s, f;
+                        h = seconds / 3600;
+                        seconds -= h * 3600;
+                        m = seconds / 60;
+                        seconds -= m * 60;
+                        s = seconds;
+                        f = frames;
+
+
+                        inst.duration = h | m << 8 | s << 16 | f << 24;
+                        inst.durationSpecified = true;
+                        inst.stream.OUT_P = inst.duration;
+                        dbr.duration = inst.duration;
+                        dbr.durationSpecified = true;
+
+                        var props = reader as IMFProps;
+
+
+
+
+                        props.PropsGet("", out var allProps);
+
+
+
+
+
+
+                        props.PropsGet("info::video.0::codec_name", out var vcodecName);
+                        props.PropsGet("info::video.0::bit_rate", out var vBitRate);
+                        if (!uint.TryParse(vBitRate, out var videoBitRate))
+                        {
+                            videoBitRate = 0;
+                        }
+
+                        props.PropsGet("info::audio.0::codec_name", out var acodecName);
+
+                        props.PropsGet("info::audio.0::bit_rate", out var aBitRate);
+                        if (!uint.TryParse(aBitRate, out var audioBitRate))
+                        {
+                            audioBitRate = 0;
+                        }
+
+
+                        firstFrame.MFAllGet(out MF_FRAME_INFO fi);
+
+                        string Suffix = (fi.avProps.vidProps.nWidth == 1920) ? "HD" :
+                            (fi.avProps.vidProps.nWidth == 3840) ? "4K" :
+                            (fi.avProps.vidProps.nWidth == 720) ? $"SD-{fi.avProps.vidProps.nAspectX}x{fi.avProps.vidProps.nAspectY}" :
+                            $"{fi.avProps.vidProps.nWidth}x{fi.avProps.vidProps.nHeight}";
+
+
+                        DataBoxExportDataBoxRecordKeyword k = new()
+                        {
+                            name = Suffix
+                        };
+                        dbr.Keywords.Add(k);
+
+
+                        if (dbr.type == "16x9 МУЗИКА - ФОЛК")
+                        {
+                            dbr.type = $"МУЗИКА - ФОЛК";
+                        }
+                        else if (dbr.type == "16x9 КАШОВЕ - ФОЛК")
+                        {
+                            dbr.type = $"КАШОВЕ - ФОЛК";
+                        }
+
+
+
+                        if (dbr.category == "Music Video Live-") dbr.category = "Music Video Live";
+                        if (dbr.category == "Music Videos-") dbr.category = "Music Video";
+
+
+
+                        inst.stream.Width = (uint)fi.avProps.vidProps.nWidth;
+                        inst.stream.Height = (uint)fi.avProps.vidProps.nHeight;
+                        inst.stream.VideoBitrate = videoBitRate;
+                        inst.stream.SampleRate = (uint)fi.avProps.audProps.nSamplesPerSec;
+                        inst.stream.AudioBitRate = audioBitRate / 1000;
+                        inst.stream.Channels = (uint)fi.avProps.audProps.nChannels;
+                        inst.stream.FrameRate = (uint)fi.avProps.vidProps.dblRate;
+                        inst.stream.VCT = vcodecName;
+                        inst.stream.ACT = acodecName;
+
+                        if (OperatingSystem.IsWindows())
+                        {
+
+                            //System.Runtime.InteropServices.Marshal.Release(props);                                
+                            System.Runtime.InteropServices.Marshal.ReleaseComObject(firstFrame);
+                            System.Runtime.InteropServices.Marshal.ReleaseComObject(lastFrame);
+                            reader.ReaderClose();
+                            System.Runtime.InteropServices.Marshal.ReleaseComObject(reader);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"Exception {e.Message}");
+                    }
+
                 }
+
             }
 
 

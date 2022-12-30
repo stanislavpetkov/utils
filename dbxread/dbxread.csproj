@@ -29,6 +29,7 @@
 
     <ItemGroup>
       <PackageReference Include="FirebirdSql.Data.FirebirdClient" Version="7.5.0" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
       <PackageReference Include="System.Text.Encoding.CodePages" Version="5.0.0" />
     </ItemGroup>
 

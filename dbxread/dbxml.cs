@@ -1,8 +1,11 @@
 ﻿
 // NOTE: Generated code may require at least .NET Framework 4.5 or .NET Core/Standard 2.0.
 //[System.SerializableAttribute()]
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 /// <remarks/>
 [System.ComponentModel.DesignerCategoryAttribute("code")]
 [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
@@ -1486,6 +1489,8 @@ public partial class DataBoxExportType
             this.nameField = value;
         }
     }
+
+    
 }
 
 /// <remarks/>
