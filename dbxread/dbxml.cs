@@ -16,12 +16,12 @@ public partial class DataBoxExport
 
     private List<DataBoxExportSequence> sequencesField = new List<DataBoxExportSequence>();
 
-    private List<DataBoxMediaTypes> mediaTypesField = new List<DataBoxMediaTypes>();
+    private List<DataBoxMediaType> mediaTypesField = new List<DataBoxMediaType>();
 
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute("MediaType")]
-    public List<DataBoxMediaTypes> MediaTypes
+    [System.Xml.Serialization.XmlArrayItemAttribute("MediaType", IsNullable = false)]
+    public List<DataBoxMediaType> MediaTypes
     {
         get
         {
@@ -1540,50 +1540,16 @@ public partial class DataBoxExportTypeGenre
 [System.SerializableAttribute()]
 [System.ComponentModel.DesignerCategoryAttribute("code")]
 [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-public partial class DataBoxMediaTypes
+public partial class DataBoxMediaType
 {
-    private string nameField;
-    private string statusField;
-    private string prepareTimeField;
+    [System.Xml.Serialization.XmlAttributeAttribute()]
+    public string name;
 
-    [System.Xml.Serialization.XmlElementAttribute("name")]
-    public string name
-    {
-        get
-        {
-            return this.nameField;
-        }
-        set
-        {
-            this.nameField = value;
-        }
-    }
+    [System.Xml.Serialization.XmlAttributeAttribute()]
+    public string Status;
 
-    [System.Xml.Serialization.XmlElementAttribute("Status")]
-    public string status
-    {
-        get
-        {
-            return this.statusField;
-        }
-        set
-        {
-            this.statusField = value;
-        }
-    }
-
-    [System.Xml.Serialization.XmlElementAttribute("PrepareTime")]
-    public string prepareTime
-    {
-        get
-        {
-            return this.prepareTimeField;
-        }
-        set
-        {
-            this.prepareTimeField = value;
-        }
-    }
+    [System.Xml.Serialization.XmlAttributeAttribute()]
+    public string PrepareTime;
 }
 
 /// <remarks/>

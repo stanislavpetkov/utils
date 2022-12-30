@@ -48,16 +48,28 @@ namespace DbxRead
 
             srcDB.MediaTypes.Clear();
 
-            DataBoxMediaTypes mt = new()
+            DataBoxMediaType mt = new()
             {
-                name = "NAS",
-                status = "3",
-                prepareTime = "0"
+                name = "Network Storage",
+                Status = "3",
+                PrepareTime = "0"
             };
             srcDB.MediaTypes.Add(mt);
-            
 
+
+
+            //var sourcefileOuttest = new FileStream(@"C:\Users\Control1\Desktop\TEST_FILE.xml", FileMode.Create);
+            //mySerializer1.Serialize(sourcefileOuttest, srcDB);
+            //sourcefileOuttest.Close();
+
+            Int64 id = 0;
             foreach (var elm in srcDB.DataBoxRecord)
+            {
+                elm.clipid = $"FOLK-2022-12-30-CVT-{id}";
+                id++;
+            }
+
+                foreach (var elm in srcDB.DataBoxRecord)
             {
                 bool Found = false;
                 foreach (var inst in elm.Instances)
