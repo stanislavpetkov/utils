@@ -12,7 +12,7 @@ namespace DbxRead
     class Program
     {
 
-        public static void Main(string[] args)
+        public static void Main(string[] _)
         {
             //JoinHDandSDXMLs();
 
@@ -60,7 +60,7 @@ namespace DbxRead
                         inst.stream.media.MediaName = "Planeta Folk HD";
 
 
-                        FileInfo fi = new FileInfo(fn);
+                        var fi = new FileInfo(fn);
                         inst.stream.FileSize = fi.Length;
                         inst.stream.FileName = fn;
                         Found = true;
@@ -88,11 +88,30 @@ namespace DbxRead
             }
 
 
-            var all_recs = srcDB.DataBoxRecord.Count();
+            var all_recs = srcDB.DataBoxRecord.Count;
             ulong filesProcessed = 0;
             Console.WriteLine("Media Info");
             foreach (var dbr in srcDB.DataBoxRecord)
             {
+                if (string.IsNullOrWhiteSpace(dbr.category))
+                {
+                    dbr.category = "NO CATEGORY!!!";
+                }
+                else
+                {
+                    dbr.category = dbr.category.Trim();
+                    while ((dbr.category.Last() == '-') || (dbr.category.Last() == ' '))
+                    {
+                        dbr.category = dbr.category.Substring(startIndex: 0, dbr.category.Length - 1);
+                        if (string.IsNullOrWhiteSpace(dbr.category))
+                        {
+                            dbr.category = "NO CATEGORY!!!";
+                            break;
+                        }
+                    }
+                }
+                
+
                 foreach (var inst in dbr.Instances)
                 {
                     filesProcessed++;
@@ -104,6 +123,15 @@ namespace DbxRead
                     }
                     if (inst.stream.FileSize > 0)
                     {
+                        if (dbr.type == "16x9 МУЗИКА - ФОЛК")
+                        {
+                            dbr.type = "МУЗИКА - ФОЛК";
+                        }
+                        else if (dbr.type == "16x9 КАШОВЕ - ФОЛК")
+                        {
+                            dbr.type = "КАШОВЕ - ФОЛК";
+                        }
+
                         if (string.IsNullOrWhiteSpace(inst.stream.FileName))
                         {
                             Console.WriteLine("OOOPS");
@@ -116,11 +144,11 @@ namespace DbxRead
                         }
                         else
                         {
-                            Console.WriteLine("Processing {} / {}", filesProcessed, all_recs);
+                            Console.WriteLine($"Processing {filesProcessed} / {all_recs}");
                         }
                         try
                         {
-                            MFReader reader = new();
+                            var reader = new MFReader();
 
 
                             reader.ReaderOpen(inst.stream.FileName, "");
@@ -153,7 +181,7 @@ namespace DbxRead
                             var props = reader as IMFProps;
 
 
-                            
+
                             props.PropsGet("info::video.0::codec_name", out var vcodecName);
                             props.PropsGet("info::video.0::bit_rate", out var vBitRate);
                             if (!uint.TryParse(vBitRate, out var videoBitRate))
@@ -183,7 +211,7 @@ namespace DbxRead
 
                             if (OperatingSystem.IsWindows())
                             {
-                                
+
                                 //System.Runtime.InteropServices.Marshal.Release(props);                                
                                 System.Runtime.InteropServices.Marshal.ReleaseComObject(firstFrame);
                                 System.Runtime.InteropServices.Marshal.ReleaseComObject(lastFrame);
@@ -213,7 +241,7 @@ namespace DbxRead
 
 
 
-            List<string> xmlFiles = new List<string>();
+            var xmlFiles = new List<string>();
 
             foreach (var dbr in srcDB.DataBoxRecord)
             {
@@ -223,8 +251,8 @@ namespace DbxRead
                 }
             }
 
-                    List<string> filesThatDontExistOnStorage = new List<string>();
-            List<string> filesThatDontExistOnDB = new List<string>();
+            var filesThatDontExistOnStorage = new List<string>();
+            var filesThatDontExistOnDB = new List<string>();
 
             foreach (var storFile in files)
             {
@@ -233,9 +261,11 @@ namespace DbxRead
             }
 
 
+
+
             foreach (var xmlfile in xmlFiles)
             {
-                if (!files.Any(p => Path.GetFileName(p) == xmlfile)) xmlFiles.Add(xmlfile);
+                if (!files.Any(p => Path.GetFileName(p) == xmlfile)) filesThatDontExistOnStorage.Add(xmlfile);
             }
 
 
@@ -260,7 +290,7 @@ namespace DbxRead
 
         }
 
-        public void JoinHDandSDXMLs()
+        public static void JoinHDandSDXMLs()
         {
             var startTime = DateTime.Now;
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
@@ -281,7 +311,7 @@ namespace DbxRead
             planetaSDFile.Close();
 
 
-            DataBoxExport outputXML = new DataBoxExport();
+            var outputXML = new DataBoxExport();
 
 
             Console.WriteLine("HD Sequences");
@@ -310,7 +340,7 @@ namespace DbxRead
                     continue;
                 }
 
-                List<DataBoxExportTypeCategory> Categories = new List<DataBoxExportTypeCategory>();
+                var Categories = new List<DataBoxExportTypeCategory>();
 
                 Categories.AddRange(typeRes.category);
                 Categories.AddRange(type.category);
@@ -318,7 +348,7 @@ namespace DbxRead
                 typeRes.category = Categories.Distinct().ToList();
 
 
-                List<DataBoxExportTypeGenre> Genres = new List<DataBoxExportTypeGenre>();
+                var Genres = new List<DataBoxExportTypeGenre>();
 
                 Genres.AddRange(typeRes.genre);
                 Genres.AddRange(type.genre);
