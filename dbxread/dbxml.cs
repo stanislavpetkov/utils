@@ -16,8 +16,24 @@ public partial class DataBoxExport
 
     private List<DataBoxExportSequence> sequencesField = new List<DataBoxExportSequence>();
 
+    private List<DataBoxMediaTypes> mediaTypesField = new List<DataBoxMediaTypes>();
 
-    
+
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute("MediaType")]
+    public List<DataBoxMediaTypes> MediaTypes
+    {
+        get
+        {
+            return this.mediaTypesField;
+        }
+        set
+        {
+            this.mediaTypesField = value;
+        }
+    }
+
+
     /// <remarks/>
     [System.Xml.Serialization.XmlElementAttribute("DataBoxRecord")]
     public List<DataBoxExportDataBoxRecord> DataBoxRecord
@@ -1370,6 +1386,8 @@ public partial class DataBoxExportDataBoxRecordInstanceStreamMedia
 
     private string mediaNameField;
 
+    private string mediaTypeField;
+
     private string poolField;
 
     /// <remarks/>
@@ -1383,6 +1401,19 @@ public partial class DataBoxExportDataBoxRecordInstanceStreamMedia
         set
         {
             this.mediaNameField = value;
+        }
+    }
+
+    [System.Xml.Serialization.XmlAttributeAttribute()]
+    public string MediaType
+    {
+        get
+        {
+            return this.mediaTypeField;
+        }
+        set
+        {
+            this.mediaTypeField = value;
         }
     }
 
@@ -1501,6 +1532,56 @@ public partial class DataBoxExportTypeGenre
         set
         {
             this.nameField = value;
+        }
+    }
+}
+
+
+[System.SerializableAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+public partial class DataBoxMediaTypes
+{
+    private string nameField;
+    private string statusField;
+    private string prepareTimeField;
+
+    [System.Xml.Serialization.XmlElementAttribute("name")]
+    public string name
+    {
+        get
+        {
+            return this.nameField;
+        }
+        set
+        {
+            this.nameField = value;
+        }
+    }
+
+    [System.Xml.Serialization.XmlElementAttribute("Status")]
+    public string status
+    {
+        get
+        {
+            return this.statusField;
+        }
+        set
+        {
+            this.statusField = value;
+        }
+    }
+
+    [System.Xml.Serialization.XmlElementAttribute("PrepareTime")]
+    public string prepareTime
+    {
+        get
+        {
+            return this.prepareTimeField;
+        }
+        set
+        {
+            this.prepareTimeField = value;
         }
     }
 }

@@ -33,7 +33,7 @@ namespace DbxRead
 
 
 
-            var srcLocation = @"\\192.168.10.252\Planeta HD\";
+            var srcLocation = @"\\storage2\Planeta HD\";
 
             var files_all = Directory.GetFiles(srcLocation, "*.*", SearchOption.AllDirectories);
 
@@ -44,7 +44,18 @@ namespace DbxRead
 
             Console.WriteLine($"Files on {srcLocation} - {files.Length}");
 
+            //<MediaType name="LocalHDD" Status="3" PrepareTime="0"/>
 
+            srcDB.MediaTypes.Clear();
+
+            DataBoxMediaTypes mt = new()
+            {
+                name = "NAS",
+                status = "3",
+                prepareTime = "0"
+            };
+            srcDB.MediaTypes.Add(mt);
+            
 
             foreach (var elm in srcDB.DataBoxRecord)
             {
@@ -58,6 +69,7 @@ namespace DbxRead
                     {
                         inst.stream.media.Pool = srcLocation;
                         inst.stream.media.MediaName = "Planeta Folk HD";
+                        inst.stream.media.MediaType = mt.name;
 
 
                         var fi = new FileInfo(fn);
@@ -69,6 +81,7 @@ namespace DbxRead
                     {
                         inst.stream.media.Pool = srcLocation;
                         inst.stream.media.MediaName = "Planeta Folk HD";
+                        inst.stream.media.MediaType = mt.name;
                         //inst.stream.FileName - keep the original
                         inst.stream.FileSize = 0;
                         Found = false;
@@ -87,12 +100,27 @@ namespace DbxRead
                 }
             }
 
-
+            foreach (var dbr in srcDB.Types)
+            {
+                if (dbr.name == "16x9 МУЗИКА - ФОЛК")
+                {
+                    dbr.name = "МУЗИКА - ФОЛК";
+                }
+                else if (dbr.name == "16x9 КАШОВЕ - ФОЛК")
+                {
+                    dbr.name = "КАШОВЕ - ФОЛК";
+                }
+            }
             var all_recs = srcDB.DataBoxRecord.Count;
             ulong filesProcessed = 0;
             Console.WriteLine("Media Info");
+
+
+
             foreach (var dbr in srcDB.DataBoxRecord)
             {
+
+
                 if (string.IsNullOrWhiteSpace(dbr.category))
                 {
                     dbr.category = "NO CATEGORY!!!";
@@ -110,7 +138,7 @@ namespace DbxRead
                         }
                     }
                 }
-                
+
 
                 foreach (var inst in dbr.Instances)
                 {
@@ -123,14 +151,7 @@ namespace DbxRead
                     }
                     if (inst.stream.FileSize > 0)
                     {
-                        if (dbr.type == "16x9 МУЗИКА - ФОЛК")
-                        {
-                            dbr.type = "МУЗИКА - ФОЛК";
-                        }
-                        else if (dbr.type == "16x9 КАШОВЕ - ФОЛК")
-                        {
-                            dbr.type = "КАШОВЕ - ФОЛК";
-                        }
+
 
                         if (string.IsNullOrWhiteSpace(inst.stream.FileName))
                         {
@@ -182,6 +203,8 @@ namespace DbxRead
 
 
 
+
+
                             props.PropsGet("info::video.0::codec_name", out var vcodecName);
                             props.PropsGet("info::video.0::bit_rate", out var vBitRate);
                             if (!uint.TryParse(vBitRate, out var videoBitRate))
@@ -199,6 +222,26 @@ namespace DbxRead
 
 
                             firstFrame.MFAllGet(out MF_FRAME_INFO fi);
+
+                            string Suffix = (fi.avProps.vidProps.nWidth == 1920) ? "HD" :
+                                (fi.avProps.vidProps.nWidth == 3840) ? "4K" :
+                                (fi.avProps.vidProps.nWidth == 720) ? $"SD {fi.avProps.vidProps.nAspectX}x{fi.avProps.vidProps.nAspectY}" :
+                                $"{fi.avProps.vidProps.nWidth}x{fi.avProps.vidProps.nHeight}";
+
+
+
+                            if (dbr.type == "16x9 МУЗИКА - ФОЛК")
+                            {
+                                dbr.type = $"МУЗИКА - ФОЛК";
+                            }
+                            else if (dbr.type == "16x9 КАШОВЕ - ФОЛК")
+                            {
+                                dbr.type = $"КАШОВЕ - ФОЛК";
+                            }
+
+
+
+
                             inst.stream.Width = (uint)fi.avProps.vidProps.nWidth;
                             inst.stream.Height = (uint)fi.avProps.vidProps.nHeight;
                             inst.stream.VideoBitrate = videoBitRate;
